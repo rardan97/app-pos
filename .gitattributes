@@ -1,0 +1,5 @@
+frontend/node_modules/** linguist-vendored
+frontend/build/** linguist-vendored
+frontend/dist/** linguist-vendored
+backend/target/** linguist-vendored
+*.d.ts linguist-vendored
