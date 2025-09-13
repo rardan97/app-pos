@@ -1,0 +1,114 @@
+services:
+    # ===================== MYSQL =====================
+    mysql-db:
+        image: mysql:8.0
+        container_name: mysql
+        environment:
+            MYSQL_ROOT_PASSWORD: root
+            MYSQL_DATABASE: db_pos
+            MYSQL_USER: appuser
+            MYSQL_PASSWORD: appuser
+        ports:
+            - "3307:3306"
+        volumes:
+            - mysql-data:/var/lib/mysql
+        networks:
+            - app-network
+        healthcheck:
+            test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-proot"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+    # ===================== REDIS =====================
+    redis:
+        image: redis:latest
+        container_name: redis
+        ports:
+            - "6379:6379"
+        volumes:
+            - redis-data:/data
+        networks:
+            - app-network
+        healthcheck:
+            test: ["CMD", "redis-cli", "ping"]
+            interval: 10s
+            timeout: 5s
+            retries: 5
+    
+    redis-insight:
+        image: redis/redisinsight:latest
+        container_name: redis_insight
+        ports:
+            - "5540:5540"
+        networks:
+            - app-network
+        depends_on:
+            - redis
+        environment:
+            - REDIS_URI=redis://redis:6379
+    # ===================== KAFKA + ZOOKEEPER =====================
+    zookeeper:
+        image: confluentinc/cp-zookeeper:7.5.0
+        environment:
+            ZOOKEEPER_CLIENT_PORT: 2181
+            ZOOKEEPER_TICK_TIME: 2000
+        ports:
+            - "2181:2181"
+        volumes:
+            - ./zookeeper-data:/var/lib/zookeeper/data
+        networks:
+            - app-network
+
+    kafka:
+        image: confluentinc/cp-kafka:7.5.0
+        depends_on:
+            - zookeeper
+        ports:
+            - "9092:9092"
+        environment:
+            KAFKA_BROKER_ID: 1
+            KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+            KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+            KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+        networks:
+            - app-network
+# ===================== SPRING BOOT (BACKEND) =====================
+    backend:
+        build: ./pos-be
+        container_name: springboot_app
+        ports:
+            - "8080:8080"
+        env_file:
+            - ./pos-be/.env
+        depends_on:
+            - mysql-db
+            - redis
+            - kafka
+        networks:
+            - app-network
+# ===================== REACT FRONTEND =====================
+    frontend:
+        build:
+            context: ./pos-fe
+            dockerfile: Dockerfile
+        container_name: react_app
+        ports:
+            - "5173:5173"
+        volumes:
+            - ./pos-fe:/app
+            - /app/node_modules
+        # env_file:
+        #     - ./pos-fe/.env
+        stdin_open: true
+        tty: true
+        depends_on:
+            - backend
+        networks:
+            - app-network
+volumes:
+    mysql-data:
+    redis-data:
+
+networks:
+    app-network:
+        driver: bridge
