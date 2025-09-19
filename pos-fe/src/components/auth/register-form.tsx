@@ -61,12 +61,14 @@ export default function RegisterForm() {
         
         try {
             const response = await getListRoleAuth();
-            const mapped = response.map((cat) => ({
-                value: cat.rolePetugasId.toString(),
-                label: cat.rolePetugasName,
-            }));
-            setOptionsRole(mapped);
-            console.log("Success processing data");
+            if(response && response.data){
+                const mapped = response.data.map((cat) => ({
+                    value: cat.rolePetugasId.toString(),
+                    label: cat.rolePetugasName,
+                }));
+                setOptionsRole(mapped);
+                console.log("Success processing data");
+            }
         } catch (error) {
             console.log("Failed processing data", error);
             throw error;

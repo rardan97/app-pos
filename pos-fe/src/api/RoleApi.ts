@@ -10,7 +10,7 @@ export const api = axios.create({
 
 export async function getListRole(token: string) : Promise<ApiResponse<Role[]> | null>{
     try{
-        const response = await api.get<ApiResponse<Role[]>>(`${REST_API_BASE_URL}/role/getRoleListAll`, {
+        const response = await api.get<ApiResponse<Role[]>>(`/role/getRoleListAll`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -25,7 +25,7 @@ export async function getListRole(token: string) : Promise<ApiResponse<Role[]> |
 
 export async function addRole(token: string, data: RoleDto) : Promise<Role>{
     try{
-        const response = await api.post<Role>(`${REST_API_BASE_URL}/role/addRole`, data, {
+        const response = await api.post<Role>(`/role/addRole`, data, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -42,7 +42,7 @@ export async function editRole(token: string, id : number, data: Role) : Promise
     console.log("Check id : "+data.rolePetugasId);
     console.log("Check name: "+data.rolePetugasName);
     try{
-        const response = await api.put<Role>(`${REST_API_BASE_URL}/role/updateRole/${id}`, data, {
+        const response = await api.put<Role>(`/role/updateRole/${id}`, data, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -58,7 +58,7 @@ export async function editRole(token: string, id : number, data: Role) : Promise
 
 export async function getRoleValueById(token: string, id : number) : Promise<ApiResponse<Role>>{
     try{
-        const response = await api.get<ApiResponse<Role>>(`${REST_API_BASE_URL}/role/getRoleFindById/${id}`, {
+        const response = await api.get<ApiResponse<Role>>(`/role/getRoleFindById/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -73,7 +73,7 @@ export async function getRoleValueById(token: string, id : number) : Promise<Api
 
 export async function delRoleValueById(token: string, id : number) : Promise<string>{
     try{
-        const response = await api.delete<string>(`${REST_API_BASE_URL}/role/deleteRoleById/${id}`, {
+        const response = await api.delete<string>(`/role/deleteRoleById/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

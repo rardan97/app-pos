@@ -12,7 +12,10 @@ const PaymentComponent: React.FC = () => {
 
     const total = transactionData.data?.itemDetails.reduce((acc, item) => acc + Number(item.price) * Number(item.quantity), 0);
 
-    const handleAdToSTransaction = async (transactionId: string, statusCode: string, orderId: string, grossAmount: string) => {
+    
+    const handleAdToSTransaction = async (transactionId: string, statusCode: string, orderId: string, currency: string, grossAmount: string,
+        paymentType: string, transactionStatus: string, statusMessage: string, transactionTime: string, settlementTime: string
+    ) => {
         const token = localStorage.getItem("accessToken");
         if (!token) return;
 
@@ -23,12 +26,36 @@ const PaymentComponent: React.FC = () => {
             subTotalAmount: String(Number(item.price) * Number(item.quantity)),
         })) ?? [];
 
+
+        console.log("==================================");
+        console.log("transactionId :"+transactionId);
+        console.log("statusCode :"+statusCode);
+        console.log("orderId :"+orderId);
+        console.log("currency :"+currency);
+        console.log("grossAmount :"+grossAmount);
+        console.log("paymentType :"+paymentType);
+        console.log("transactionStatus :"+transactionStatus);
+        console.log("statusMessage :"+statusMessage);
+        console.log("transactionTime :"+transactionTime);
+        console.log("settlementTime :"+settlementTime);
+        console.log("==================================");
+
         const payload: TransactionReq = {
+
+
+            
         transaction: {
             transactionId:transactionId,
             statusCode:Number(statusCode),
+            currency:currency,
             grossAmount:grossAmount,
-            orderId:orderId
+            orderId:orderId,
+            paymentType:paymentType,
+            transactionStatus:transactionStatus,
+            statusMessage:statusMessage,
+            transactionTime:transactionTime,
+            settlementTime:settlementTime
+
         },
         transactionItemList: transformed,
         };
@@ -44,12 +71,19 @@ const PaymentComponent: React.FC = () => {
 
     type SnapResult = Record<string, unknown>;
 
+
     function parseSnapResult(result: SnapResult) {
         return {
             transactionId: typeof result.transaction_id === "string" ? result.transaction_id : "",
             statusCode: typeof result.status_code === "string" ? result.status_code : "",
             orderId: typeof result.order_id === "string" ? result.order_id : "",
+            currency: typeof result.currency === "string" ? result.currency : "",
             grossAmount: typeof result.gross_amount === "string" ? result.gross_amount : "",
+            paymentType: typeof result.payment_type === "string" ? result.payment_type : "",
+            transactionStatus: typeof result.transaction_status === "string" ? result.transaction_status : "",
+            statusMessage: typeof result.status_message === "string" ? result.status_message : "",
+            transactionTime: typeof result.transaction_time === "string" ? result.transaction_time : "",
+            settlementTime: typeof result.settlement_time === "string" ? result.settlement_time : "",
         };
     }
 
@@ -68,20 +102,25 @@ const PaymentComponent: React.FC = () => {
             embedId: "snap-container",
             onSuccess: (result : SnapResult) => {
                 console.log("Snap Success Result:", result);
-                const { transactionId, statusCode, orderId, grossAmount } = parseSnapResult(result);
-                handleAdToSTransaction(transactionId, statusCode, orderId, grossAmount);
+
+                console.log("Snap current:", result.currency);
+
+
+
+                const { transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime } = parseSnapResult(result);
+                handleAdToSTransaction(transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime);
                 setIsSnapOpen(false);
             },
             onPending: (result) => {
                 console.log("onPending:", result);
-                const { transactionId, statusCode, orderId, grossAmount } = parseSnapResult(result);
-                handleAdToSTransaction(transactionId, statusCode, orderId, grossAmount);
+                const { transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime } = parseSnapResult(result);
+                handleAdToSTransaction(transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime);
                 setIsSnapOpen(false);
             },
             onError: (result) => {
                 console.log("onError:", result);
-                const { transactionId, statusCode, orderId, grossAmount } = parseSnapResult(result);
-                handleAdToSTransaction(transactionId, statusCode, orderId, grossAmount);
+                const { transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime } = parseSnapResult(result);
+                handleAdToSTransaction(transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime);
                 setIsSnapOpen(false);
             },
             onClose: () => {

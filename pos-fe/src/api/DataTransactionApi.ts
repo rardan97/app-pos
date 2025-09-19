@@ -1,22 +1,23 @@
 import { REST_API_BASE_URL } from "@/config";
-import type { Petugas } from "@/interface/Petugas.interface";
+import type { ApiResponse } from "@/interface/ApiResponse.interface";
+import type { DataTransactionDto } from "@/interface/DataTransaction.interface";
 import axios from "axios";
-
 
 export const api = axios.create({
     baseURL: REST_API_BASE_URL,
     withCredentials: true
 });
 
-export async function getListPetugas(token: string) : Promise<Petugas[]>{
+export async function getDataTransactionListAll(token: string) : Promise<ApiResponse<DataTransactionDto[]> | null>{
     console.log("Data Token : "+token);
     try{
-        const response = await api.get<Petugas[]>(`/datapetugas/getPetugasListAll`, {
+        const response = await api.get<ApiResponse<DataTransactionDto[]>>(`/data-transaction/getDataTransactionListAll`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
         });
+
         return response.data;
     }catch(error){
         console.error("Error during user fetch:", error);
@@ -24,12 +25,11 @@ export async function getListPetugas(token: string) : Promise<Petugas[]>{
     }
 }
 
-
-export async function getPetugasValueById(token: string, id : number) : Promise<Petugas>{
+export async function getCategoryValueById(token: string, id : number) : Promise<ApiResponse<Category> | null>{
     console.log("check token :"+token);
     console.log("check id :"+id);
     try{
-        const response = await api.get<Petugas>(`/datapetugas/getPetugasFindById/${id}`, {
+        const response = await api.get<ApiResponse<Category>>(`/category/getCategoryFindById/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -41,3 +41,4 @@ export async function getPetugasValueById(token: string, id : number) : Promise<
         throw new Error("Failed to fetch users");
     }
 }
+

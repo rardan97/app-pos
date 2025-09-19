@@ -1,9 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
-import type { Product } from "@/interface/Product.interface";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "../ui/card";
-import { getListProduct } from "@/api/ProductApi";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 // import ProductAdd from "./ProductAdd";
 // import ProductEdit from "./ProductEdit";
 // import ProductDelete from "./ProductDelete";
@@ -15,16 +13,18 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import { getDataTransactionListAll } from "@/api/DataTransactionApi";
+import type { DataTransactionDto } from "@/interface/DataTransaction.interface";
 
 
 export default function DataTransactionList() {
     const hasFetched = useRef(false);
-    const [productData, setProductData] = useState<Product[]>([]);
+    const [transactionData, setTransactionData] = useState<DataTransactionDto[]>([]);
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
-    const totalPages = Math.ceil(productData.length / itemsPerPage);
+    const totalPages = Math.ceil(transactionData.length / itemsPerPage);
 
-    const paginatedData = productData.slice(
+    const paginatedData = transactionData.slice(
         (currentPage - 1) * itemsPerPage,
         currentPage * itemsPerPage
     );
@@ -36,10 +36,10 @@ export default function DataTransactionList() {
             return;
         }
         try {
-            const response = await getListProduct(token);   
+            const response = await getDataTransactionListAll(token);   
             if(response && response.data){
                 console.log("Success processing data");
-                setProductData(response.data);
+                setTransactionData(response.data);
             }
         } catch (error) {
             console.log("Failed processing data", error);
@@ -57,7 +57,7 @@ export default function DataTransactionList() {
 
     useEffect(() => {
         setCurrentPage(1); // Reset ke halaman 1 saat data berubah
-    }, [productData]);
+    }, [transactionData]);
 
     return (
         <>
@@ -69,35 +69,46 @@ export default function DataTransactionList() {
                 <Card className="m-9 p-9">
                     <CardHeader>
                         <CardTitle>Data Transaction</CardTitle>
-                        {/* <CardAction><ProductAdd onSuccess={getListAllProduct}/></CardAction> */}
                     </CardHeader>
                     <CardContent>
                         <Table>
                             <TableHeader>
                                 <TableRow>
                                     <TableHead className="w-[100px]">#</TableHead>
-                                    <TableHead>Order ID</TableHead>
                                     <TableHead>Transaction ID</TableHead>
-                                    <TableHead>Status Payment</TableHead>
-                                    <TableHead>Total Amount</TableHead>
+                                    <TableHead>Order ID</TableHead>
+                                    <TableHead>Gross Amount</TableHead>
+                                    <TableHead>Currency</TableHead>
+                                    <TableHead>Payment Type</TableHead>
+                                    <TableHead>Transaction Status</TableHead>
+                                    <TableHead>Transaction Time</TableHead>
                                     <TableHead className="text-right">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {paginatedData
-                                    .filter((product) => 
-                                        product.productId !== null && 
-                                        product.productId !== undefined
+                                    .filter((transactionDataRow) => 
+                                        transactionDataRow.transactionId !== null && 
+                                        transactionDataRow.transactionId !== undefined
                                     )
-                                    .map((product) => (
-                                <TableRow key={product.productId}>
-                                    <TableCell className="font-medium">{product.productId}</TableCell>
-                                    <TableCell>{product.productName}</TableCell>
-                                    <TableCell>{product.productDescription}</TableCell>
-                                    <TableCell>{product.productPrice}</TableCell>
+                                    .map((transactionDataRow, index) => (
+                                <TableRow key={transactionDataRow.transactionId}>
+                                    <TableCell className="font-medium">
+                                    {
+          
+                                    (currentPage - 1) * itemsPerPage + index + 1
+                                        
+                                    }
+                                    </TableCell>
+                                    <TableCell>{transactionDataRow.transactionId}</TableCell>
+                                    <TableCell>{transactionDataRow.orderId}</TableCell>
+                                    <TableCell>{transactionDataRow.grossAmount}</TableCell>
+                                    <TableCell>{transactionDataRow.currency}</TableCell>
+                                    <TableCell>{transactionDataRow.paymentType}</TableCell>
+                                    <TableCell>{transactionDataRow.transactionStatus}</TableCell>
+                                    <TableCell>{transactionDataRow.transactionTime}</TableCell>
                                     <TableCell className="text-right ">
-                                        {/* <ProductEdit onSuccess={getListAllProduct} idProduct={product.productId as number} />
-                                        <ProductDelete onSuccess={getListAllProduct} idProduct={product.productId as number} />  */}
+                                        {/* <ProductEdit onSuccess={getListAllProduct} idProduct={product.productId as number} /> */}
                                     </TableCell>
                                 </TableRow>
                                 ))}

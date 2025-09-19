@@ -84,6 +84,8 @@ services:
             - mysql-db
             - redis
             - kafka
+        volumes:
+            - ./uploads:/app/uploads
         networks:
             - app-network
 # ===================== REACT FRONTEND =====================
@@ -97,6 +99,7 @@ services:
         volumes:
             - ./pos-fe:/app
             - /app/node_modules
+        command: npm run dev
         # env_file:
         #     - ./pos-fe/.env
         stdin_open: true

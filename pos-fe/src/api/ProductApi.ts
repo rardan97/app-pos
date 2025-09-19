@@ -10,7 +10,7 @@ export const api = axios.create({
 
 export async function getListProduct(token: string) : Promise<ApiResponse<Product[]> | null>{
     try{
-        const response = await api.get<ApiResponse<Product[]>>(`${REST_API_BASE_URL}/product/getProductListAll`, {
+        const response = await api.get<ApiResponse<Product[]>>(`/product/getProductListAll`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -28,7 +28,7 @@ export async function getListProduct(token: string) : Promise<ApiResponse<Produc
 
 export async function getProductValueById(token: string, id : number) : Promise<ApiResponse<Product>>{
     try{
-        const response = await api.get<ApiResponse<Product>>(`${REST_API_BASE_URL}/product/getProductFindById/${id}`, {
+        const response = await api.get<ApiResponse<Product>>(`/product/getProductFindById/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -61,7 +61,7 @@ export async function addProduct(token: string, data: AddProductDto) : Promise<P
     }
 
     try{
-        const response = await api.post<Product>(`${REST_API_BASE_URL}/product/addProduct`, formData, {
+        const response = await api.post<Product>(`/product/addProduct`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }, 
@@ -98,7 +98,7 @@ export async function editProduct(token: string, id : number, data: EditProductD
     console.log("formData image: "+formData.get("productImage"));
 
     try{
-        const response = await api.put<Product>(`${REST_API_BASE_URL}/product/updateProduct/${id}`, formData, {
+        const response = await api.put<Product>(`/product/updateProduct/${id}`, formData, {
             headers: {
                 Authorization: `Bearer ${token}`,
             }, 
@@ -115,7 +115,7 @@ export async function editProduct(token: string, id : number, data: EditProductD
 
 export async function getLoadImageProduct(token: string, filename : File | string) : Promise<Blob>{
     try{
-        const response = await api.get<Blob>(`${REST_API_BASE_URL}/product/images/${filename}`, {
+        const response = await api.get<Blob>(`/product/images/${filename}`, {
             responseType:'blob',
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -130,7 +130,7 @@ export async function getLoadImageProduct(token: string, filename : File | strin
 
 export async function delProductValueById(token: string, id : number) : Promise<string>{
     try{
-        const response = await api.delete<string>(`${REST_API_BASE_URL}/product/deleteProductById/${id}`, {
+        const response = await api.delete<string>(`/product/deleteProductById/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

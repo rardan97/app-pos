@@ -37,6 +37,7 @@ export default function ProductList() {
         }
         try {
             const response = await getListProduct(token);   
+            console.log("data check" +response?.data);
             if(response && response.data){
                 console.log("Success processing data");
                 setProductData(response.data);

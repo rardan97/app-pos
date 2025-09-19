@@ -22,7 +22,7 @@ export const api = axios.create({
 
 export async function signInAuth(data: SignInReq): Promise<ApiResponse<SignInRes> | null> {
   try {
-    const response = await axios.post<ApiResponse<SignInRes>>(`${REST_API_BASE_URL_AUTH}/signin`, data);
+    const response = await api.post<ApiResponse<SignInRes>>(`/signin`, data);
     return response.data;
   } catch (error) {
     console.error("Login failed:", error);

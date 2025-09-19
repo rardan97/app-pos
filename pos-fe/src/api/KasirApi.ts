@@ -15,7 +15,7 @@ export async function checkoutTransaction(token: string, data: CheckoutTransacti
     // console.log("token : "+token);
     console.log("dataProductTransaksi : "+data.dataProductTransactions);
     try{
-        const response = await api.post<ApiResponse<CheckoutTransactionRes>>(`${REST_API_BASE_URL}/order-transaction/createOrderTransaction`, data, {
+        const response = await api.post<ApiResponse<CheckoutTransactionRes>>(`/order-transaction/createOrderTransaction`, data, {
             headers: {
                 'Accept': 'application/json',
                 "Content-Type": "application/json",
@@ -37,7 +37,7 @@ export async function checkoutTransactionStatus(token: string, data: Transaction
     // console.log("token : "+token);
     
     try{
-        const response = await api.post<ApiResponse<TransactionRes>>(`${REST_API_BASE_URL}/order-transaction/createStatusTransaction`, data, {
+        const response = await api.post<ApiResponse<TransactionRes>>(`/order-transaction/createStatusTransaction`, data, {
             headers: {
                 'Accept': 'application/json',
                 "Content-Type": "application/json",

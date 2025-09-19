@@ -27,6 +27,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -116,20 +119,24 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         List<TransactionItemDto> transactionDetailListReq = transactionReq.getTransactionItemList();
 
         transaction.setTransactionId(transactionReqTemp.getTransactionId());
-//        transaction.setToken(transactionReqTemp.getToken());
         transaction.setStatusCode(transactionReqTemp.getStatusCode());
         transaction.setGrossAmount(transactionReqTemp.getGrossAmount());
-//        transaction.setCurrency(transactionReqTemp.getCurrency());
+        transaction.setCurrency(transactionReqTemp.getCurrency());
         transaction.setOrderId(transactionReqTemp.getOrderId());
-//        transaction.setPaymentType(transactionReqTemp.getPaymentType());
-//        transaction.setTransactionStatus(transactionReqTemp.getTransactionStatus());
-//        transaction.setFraudStatus(transactionReqTemp.getFraudStatus());
-//        transaction.setStatusMessage(transactionReqTemp.getStatusMessage());
-//        transaction.setIssuer(transactionReqTemp.getIssuer());
-//        transaction.setAcquirer(transactionReqTemp.getAcquirer());
-//        transaction.setTransactionTime(transactionReqTemp.getTransactionTime());
-//        transaction.setSettlementTime(transactionReqTemp.getSettlementTime());
-//        transaction.setExpiryTime(transactionReqTemp.getExpiryTime());
+        transaction.setPaymentType(transactionReqTemp.getPaymentType());
+        transaction.setTransactionStatus(transactionReqTemp.getTransactionStatus());
+        transaction.setStatusMessage(transactionReqTemp.getStatusMessage());
+
+        System.out.println("transactionTime: "+transactionReqTemp.getTransactionTime());
+
+        DateTimeFormatter formatterDateTime = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        LocalDateTime dateTransactionTime = LocalDateTime.parse(transactionReqTemp.getTransactionTime(), formatterDateTime);
+
+        Date dateTimeTransaction = Date.from(dateTransactionTime.atZone(ZoneId.systemDefault()).toInstant());
+//        Date dateTimeSettlementTime = Date.from(dateSettlementTime.atZone(ZoneId.systemDefault()).toInstant());
+        transaction.setTransactionTime(dateTimeTransaction);
+//        transaction.setSettlementTime(dateTimeSettlementTime);
+
         transaction.setPetugas(petugas);
         Transaction saveTransaction = transactionRepository.save(transaction);
 
@@ -149,8 +156,6 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         transactionRes.setOrderId(saveTransaction.getOrderId());
         return transactionRes;
     }
-
-
 
 
     private static int calculateTotal(List<DataProductTransaction> items) {

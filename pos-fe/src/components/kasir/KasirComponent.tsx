@@ -28,24 +28,25 @@ export default function KasirComponent() {
 
         try {
             const response = await getListProduct(token);
+            
         
             if(response && response.data){
+                
                 const productsWithImages: ProductWithImageUrl[] = await Promise.all(
-                    
-                        response.data.map(async (product: Product) => {
+                    response.data.map(async (product: Product) => {
                         let imageUrl = "/placeholder.png";
                         if (product.productImage) {
+                            
                             try {
-                            const imageBlob = await getLoadImageProduct(token, product.productImage);
-                            imageUrl = URL.createObjectURL(imageBlob);
+                                const imageBlob = await getLoadImageProduct(token, product.productImage);
+                                imageUrl = URL.createObjectURL(imageBlob);
                             } catch (error) {
-                            console.warn("Gagal load image untuk product:", product.productId);
-                            console.error("Failed processing data", error);
+                                console.warn("Gagal load image untuk product:", product.productId);
+                                console.error("Failed processing data", error);
                             }
                         }
                         return { ...product, imageUrl };
-                        })
-                    
+                    })
                 );
 
                 setProductData(productsWithImages);
@@ -63,8 +64,10 @@ export default function KasirComponent() {
 
         return () => {
             productData.forEach((product) => {
+                console.log(product.imageUrl);
                 if (product.imageUrl.startsWith("blob:")) {
-                URL.revokeObjectURL(product.imageUrl);
+                    console.log("check image :"+product.imageUrl);
+                    URL.revokeObjectURL(product.imageUrl);
                 }
             });
         };
@@ -82,12 +85,11 @@ export default function KasirComponent() {
             );
         }
         return [
-            ...prevCart,
-            {
-            id: item.productId,
-            name: item.productName,
-            price: Number(item.productPrice),
-            qty: 1,
+            ...prevCart, {
+                id: item.productId,
+                name: item.productName,
+                price: Number(item.productPrice),
+                qty: 1,
             },
         ];
         });
@@ -95,17 +97,16 @@ export default function KasirComponent() {
 
     const handleIncreaseQty = (id: number) => {
         setCart((prevCart) =>
-        prevCart.map((item) =>
-            item.id === id ? { ...item, qty: item.qty + 1 } : item
-        )
+            prevCart.map((item) =>
+                item.id === id ? { ...item, qty: item.qty + 1 } : item
+            )
         );
     };
 
     const handleDecrease = (id: number) => {
         setCart((prevCart) =>
-        prevCart
-            .map((item) =>
-            item.id === id ? { ...item, qty: item.qty - 1 } : item
+            prevCart.map((item) =>
+                item.id === id ? { ...item, qty: item.qty - 1 } : item
             )
             .filter((item) => item.qty > 0)
         );

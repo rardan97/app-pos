@@ -2,6 +2,8 @@ package com.blackcode.pos_be.controller;
 
 import com.blackcode.pos_be.common.dto.ApiResponse;
 import com.blackcode.pos_be.dto.CategoryRes;
+import com.blackcode.pos_be.dto.data_transaction.DataTransactionRes;
+import com.blackcode.pos_be.dto.transaction.TransactionRes;
 import com.blackcode.pos_be.service.DataTransactionService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,15 +22,15 @@ public class DataTransaction {
 
 
     @GetMapping("/getDataTransactionListAll")
-    public ResponseEntity<ApiResponse<List<CategoryRes>>> getDataTransactionListAll(){
-        List<CategoryRes> categoryResList = transactionService.getDataTransactionListAll();
-        return ResponseEntity.ok(ApiResponse.success("Categories retrieved successfully", 200, categoryResList));
+    public ResponseEntity<ApiResponse<List<DataTransactionRes>>> getDataTransactionListAll(){
+        List<DataTransactionRes> transactionResList = transactionService.getDataTransactionListAll();
+        return ResponseEntity.ok(ApiResponse.success("Transaction retrieved successfully", 200, transactionResList));
     }
 
     @GetMapping("/getDataTransactionById/{id}")
-    public ResponseEntity<ApiResponse<CategoryRes>> getDataTransactionById(@PathVariable("id") Long id){
-        CategoryRes categoryRes = transactionService.getDataTransactionById(id);
-        return ResponseEntity.ok(ApiResponse.success("Category found",200, categoryRes));
+    public ResponseEntity<ApiResponse<DataTransactionRes>> getDataTransactionById(@PathVariable("id") Long id){
+        DataTransactionRes transactionRes = transactionService.getDataTransactionById(id);
+        return ResponseEntity.ok(ApiResponse.success("Transaction found",200, transactionRes));
     }
 
 

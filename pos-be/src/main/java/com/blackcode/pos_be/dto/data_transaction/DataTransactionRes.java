@@ -1,23 +1,25 @@
-package com.blackcode.pos_be.dto.transaction;
+package com.blackcode.pos_be.dto.data_transaction;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.Date;
+
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class TransactionDto {
+public class DataTransactionRes {
+
+    private String Id;
 
     private String transactionId;
 
-    private int statusCode;
+    private String grossAmount;
 
     private String currency;
-
-    private String grossAmount;
 
     private String orderId;
 
@@ -27,8 +29,7 @@ public class TransactionDto {
 
     private String statusMessage;
 
-    private String transactionTime;
+    private Date transactionTime;
 
-    private String settlementTime;
-
+    private String petugasId;
 }

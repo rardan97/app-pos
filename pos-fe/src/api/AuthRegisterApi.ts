@@ -1,4 +1,5 @@
 import { REST_API_BASE_URL_AUTH } from "@/config";
+import type { ApiResponse } from "@/interface/ApiResponse.interface";
 import type { Role } from "@/interface/Role.interface";
 import type { SignUpReq, SignUpRes } from "@/interface/SignUp.interface";
 import axios from "axios";
@@ -8,22 +9,22 @@ export const api = axios.create({
     withCredentials: true
 });
 
-export async function signUpAuth(data: SignUpReq): Promise<{ data: SignUpRes | null }> {
+export async function signUpAuth(data: SignUpReq): Promise<ApiResponse<SignUpRes> | null > {
     console.log("data :"+data);
     try{
-        const response = await axios.post<SignUpRes>(`${REST_API_BASE_URL_AUTH}/signup`, data);
+        const response = await api.post<ApiResponse<SignUpRes>>(`/signup`, data);
         console.log(response);
-        return { data: response.data };
+        return response.data;
     }catch (error){
-        console.error("Login failed:", error);
-        return { data: null };
+        console.error("Sign Up failed:", error);
+        throw new Error("Sign Up failed");
     }
 }
 
-export async function getListRoleAuth() : Promise<Role[]>{
+export async function getListRoleAuth() : Promise<ApiResponse<Role[]>>{
     console.log(REST_API_BASE_URL_AUTH);
     try{
-        const response = await api.get<Role[]>(`${REST_API_BASE_URL_AUTH}/getRoleListAll`, {
+        const response = await api.get<ApiResponse<Role[]>>(`/getRoleListAll`, {
             headers: {
                 "Content-Type": "application/json"
             },

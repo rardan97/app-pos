@@ -80,14 +80,31 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
                  if(response && response.data){   
                     console.log("Success processing data");
                     if (response.data.productImage) {
-                        const resImage = await getLoadImageProduct(token, response.data.productImage);
-                        const url = URL.createObjectURL(resImage);
-                        setPreviewUrl(url);
-                        console.log("Data Image get : "+response.data.productImage);
-                        setProductImage(response.data.productImage);
+
+
+                        try {
+                            const resImage = await getLoadImageProduct(token, response.data.productImage);
+                            if (resImage) {
+                                const url = URL.createObjectURL(resImage);
+                                setPreviewUrl(url);
+                                console.log("Data Image get : "+response.data.productImage);
+                                setProductImage(response.data.productImage);
+                            }else{
+                                console.warn("Gambar tidak ditemukan, menggunakan placeholder.");
+                                setPreviewUrl("/placeholder.png");
+                                setProductImage("");
+                            }
+                        } catch (error) {
+                            console.error("Gagal load image:", error);
+                            setPreviewUrl("/placeholder.png");
+                            setProductImage("");
+                        }
                     } else {
+                        setPreviewUrl("/placeholder.png");
                         setProductImage(""); 
                     }
+
+                    console.log("Success processing data testttt");
                     setProductId(response.data.productId);
                     setProductName(response.data.productName);
                     setProductDescription(response.data.productDescription);
