@@ -16,16 +16,12 @@ if (!document.querySelector(`script[src="${SNAP_JS_URL}"]`)) {
   document.head.appendChild(midtransScript)
 }
 
-
-
 createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-    <ThemeProvider storageKey="vite-ui-theme">
-      <App />
-    </ThemeProvider>
-    </BrowserRouter>
-    
-    
-  </StrictMode>,
+    <StrictMode>
+        <BrowserRouter>
+            <ThemeProvider storageKey="vite-ui-theme">
+                <App />
+            </ThemeProvider>
+        </BrowserRouter>
+    </StrictMode>,
 )

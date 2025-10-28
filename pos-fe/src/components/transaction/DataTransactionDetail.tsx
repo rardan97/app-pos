@@ -14,57 +14,52 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { useModal } from "@/hooks/useModal";
-import { editCategories, getCategoryValueById } from "@/api/CategoryApi";
 import type { Category } from "@/interface/Category.interface";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircleIcon } from "lucide-react";
+import { getDataTransactionById } from "@/api/DataTransactionApi";
 
 
 type DataTransactionDetailProps = {
     onSuccess: () => void;
-    idTransactionId: number;
+    idTransactionId: string;
 };
 
 
-interface Errors {
-    categoryName: string;
-    categoryDescription: string;
-}
 
 export default function DataTransactionDetail({onSuccess, idTransactionId} : DataTransactionDetailProps) {
 
-    
-
     const { isOpen, setIsOpen, openModal, closeModal } = useModal();
+    const [id, setId] = useState<string>();  
+    const [transactionId, setTransactionId] = useState<string>("");
+    const [grossAmount, setGrossAmount] = useState<string>("");
+    const [currency, setCurrency] = useState<string>("");
+    const [orderId, setOrderId] = useState<string>("");
+    const [paymentType, setPaymentType] = useState<string>("");
+    const [transactionStatus, setTransactionStatus] = useState<string>("");
+    const [statusMessage, setStatusMessage] = useState<string>("");
+    const [transactionTime, setTransactionTime] = useState<string>("");
+    const [petugasId, setPetugasId] = useState<string>("");
 
-    const [categoryId, setCategoryId] = useState<number>();  
-    const [categoryName, setCategoryName] = useState<string>("");
-    const [categoryDescription, setCategoryDescription] = useState<string>("");
-    const [errorsAll, setErrorsAll] = useState<string>("");
-
-    
-    
-
-    // const [open, setOpen] = React.useState(false)
-//   const isDesktop = useMediaQuery("(min-width: 768px)")
-
-    const [errors, setErrors] = useState<Errors>({
-        categoryName: '',
-        categoryDescription: ''
-    });
-
-    const getCategory = useCallback(async (): Promise<void> => {
+    const getTransactionById = useCallback(async (): Promise<void> => {
         const token = localStorage.getItem("accessToken");
         if (!token){
             return;
         }
         try {
-            const response = await getCategoryValueById(token, idTransactionId);
+            const response = await getDataTransactionById(token, idTransactionId);
             console.log("Success processing data");
               if(response && response.data){
-                setCategoryId(response.data.categoryId);
-                setCategoryName(response.data.categoryName);
-                setCategoryDescription(response.data.categoryDescription || "");
+                setId(response.data.Id);
+                setTransactionId(response.data.transactionId);
+                setGrossAmount(response.data.grossAmount);
+                setCurrency(response.data.currency);
+                setOrderId(response.data.orderId);
+                setPaymentType(response.data.paymentType);
+                setTransactionStatus(response.data.transactionStatus);
+                setStatusMessage(response.data.statusMessage);
+                setTransactionTime(response.data.transactionTime);
+                setPetugasId(response.data.petugasId);
               }
         } catch (error) {
             console.log("Failed processing data", error);
@@ -74,127 +69,23 @@ export default function DataTransactionDetail({onSuccess, idTransactionId} : Dat
     
     useEffect(() => {
             if (isOpen) {
-                getCategory();
+                getTransactionById();
             }
-    }, [isOpen, getCategory]);
+    }, [isOpen, getTransactionById]);
 
-
-    
-    function validateForm(): boolean{
-        console.log("proccess validation");
-        let valid = true;
-        const errorsCopy = {... errors}
-        if(categoryName.trim()){
-            errorsCopy.categoryName = '';
-        }else{
-            errorsCopy.categoryName = 'email is required';
-            valid = false;
-        }
-    
-        if(categoryDescription.trim()){
-            errorsCopy.categoryDescription = '';
-        }else{
-            errorsCopy.categoryDescription = 'password is required';
-            valid = false;
-        }
-        setErrors(errorsCopy);
-        return valid;
-    }
-
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const token = localStorage.getItem("accessToken");
-        if (!token) {
-            return;
-        }
-        if (validateForm()) {
-            console.log("success validation");
-            try {
-                 if (categoryId === undefined) {
-                    throw new Error("categoryId is undefined");
-                }
-                const newCategory: Category = {
-                    categoryId,
-                    categoryName,
-                    categoryDescription,
-                };
-
-                
-                const result = await editCategories(token, categoryId, newCategory);
-                if(result){
-                    console.log("success add data", result);
-                    setCategoryName("");
-                    setCategoryDescription("");
-                    setErrorsAll("");
-                    closeModal();
-                    onSuccess();
-                }else{
-                    setErrorsAll("Login gagal. Cek email/password.");
-                }
-            } catch (err) {
-                console.error("Gagal login", err);
-                setErrorsAll("Login gagal. Cek email/password.");
-            }
-        }
-
-        console.log("Saving changes...");
-        closeModal();
-    };
-
-
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-         <DialogTrigger asChild>
-           <Button variant="outline" onClick={openModal}>Edit</Button>
-         </DialogTrigger>
-         <DialogContent className="sm:max-w-[425px]" >
-           <DialogHeader>
-             <DialogTitle>Edit Category</DialogTitle>
-             <DialogDescription>
-               Make changes to your category here. Click save when you&apos;re
-               done.
-             </DialogDescription>
-           </DialogHeader>
-           <form className={cn("grid items-start gap-6")} onSubmit={handleSave}>
-                {errorsAll && 
-                    <Alert variant="destructive">
-                        <AlertCircleIcon />
-                        <AlertTitle>Unable to process your payment.</AlertTitle>
-                        <AlertDescription>
-                        <p>Please verify your billing information and try again.</p>
-                        {errorsAll}
-                        </AlertDescription>
-                    </Alert>
-                }
-
-                <Input 
-                        id="categoryId" 
-                        type="hidden" 
-                        value={categoryId ?? ''}
-                        onChange={(e) => setCategoryId(Number(e.target.value))}
-                    />
-            
-                <div className="grid gap-3">
-                    <Label htmlFor="categoryName">Category Name</Label>
-                    <Input 
-                        id="categoryName" 
-                        type="text" 
-                        value={categoryName}
-                        onChange={(e) => setCategoryName(e.target.value)}
-                    />
-                    {errors.categoryName && <p className="text-red-500 text-sm">{errors.categoryName}</p>}
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <Button variant="outline" onClick={openModal}>View</Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]" >
+                <DialogHeader>
+                    <DialogTitle>View Data Transaction</DialogTitle>
+                </DialogHeader>
+                <div className={cn("grid items-start gap-6")}>
+                    
                 </div>
-                <div className="grid gap-3">
-                    <Label htmlFor="categoryDescription">Category Deskripsi</Label>
-                    <Input 
-                        id="categoryDescription" 
-                        type="text" 
-                        value={categoryDescription}
-                        onChange={(e) => setCategoryDescription(e.target.value)}/>
-                </div>
-                <Button type="submit">Save changes</Button>
-            </form>
-         </DialogContent>
-       </Dialog>
-  )
+            </DialogContent>
+        </Dialog>
+    )
 }

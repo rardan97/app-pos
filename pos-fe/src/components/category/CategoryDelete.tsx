@@ -70,17 +70,17 @@ export default function CategoryDelete({onSuccess, idCat} : CategoryDeleteProps)
             
             const result = await delCategoryValueById(token, categoryId);
             if(result){
-                console.log("success add data", result);
+                console.log("success delete category", result);
                 setCategoryName("");
                 setErrorsAll("");
                 closeModal();
                 onSuccess();
             }else{
-                setErrorsAll("Login gagal. Cek email/password.");
+                setErrorsAll("Failed Delete Category");
             }
         } catch (err) {
-            console.error("Gagal login", err);
-            setErrorsAll("Login gagal. Cek email/password.");
+            console.error("Failed Delete Category", err);
+            setErrorsAll("Failed Delete Category");
         }
 
         console.log("Saving changes...");
@@ -91,13 +91,13 @@ export default function CategoryDelete({onSuccess, idCat} : CategoryDeleteProps)
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-            <Button variant="outline" onClick={openModal}>Delete</Button>
+            <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" variant="outline" onClick={openModal}>Delete Category</Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]" >
             <DialogHeader>
                 <DialogTitle>Delete Category</DialogTitle>
                 <DialogDescription>
-                Make changes to your category here. Click save when you&apos;re
+                Delete to your category here. Click Delete when you&apos;re
                 done.
                 </DialogDescription>
             </DialogHeader>
@@ -130,7 +130,7 @@ export default function CategoryDelete({onSuccess, idCat} : CategoryDeleteProps)
                         disabled 
                     />
                 </div>
-                <Button type="submit">Delete</Button>
+                <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" type="submit">Delete</Button>
             </form>
         </DialogContent>
     </Dialog>

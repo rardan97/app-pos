@@ -19,13 +19,10 @@ import type { EditProductDto } from "@/interface/Product.interface";
 import { Label } from "@radix-ui/react-label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
-
-
 type OptionCategory = {
   value: string;
   label: string;
 };
-
 
 type ProductEditProps = {
     onSuccess: () => void;
@@ -36,95 +33,84 @@ interface Errors {
     productName: string;
     productDescription: string;
     productPrice: string;
-    productStock: number;
+    productStock: string;
     productImage:string;
     productCategoryId: string;
 }
 
 export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
-
-    
     const { isOpen, setIsOpen, openModal, closeModal } = useModal();
-    const [productId, setProductId] = useState<number>();  
     const [productName, setProductName] = useState<string>("");
     const [productDescription, setProductDescription] = useState<string>("");
     const [productPrice, setProductPrice] = useState<string>("");
     const [productStock, setProductStock] = useState<number>(0);
     const [productImage, setProductImage] = useState<File | string>("");
     const [productCategoryId, setProductCategoryId] = useState<string>("");
-
     const [optionsCategory, setOptionsCategory] = useState<OptionCategory[]>([]);
-
     const [previewUrl, setPreviewUrl] = useState<string>("");
     const [errorsAll, setErrorsAll] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
     const hasFetched = useRef(false);
     
     const [errors, setErrors] = useState<Errors>({
         productName: '',
         productDescription: '',
         productPrice: '',
-        productStock: 0,
+        productStock: '',
         productImage:'',
         productCategoryId: '',
         
     });
 
     const getProduct = useCallback(async (): Promise<void> => {
-            const token = localStorage.getItem("accessToken");
-            if (!token){
-                return;
-            }
-
-            try {
-                const response = await getProductValueById(token, idProduct);
-                 if(response && response.data){   
-                    console.log("Success processing data");
-                    if (response.data.productImage) {
-
-
-                        try {
-                            const resImage = await getLoadImageProduct(token, response.data.productImage);
-                            if (resImage) {
-                                const url = URL.createObjectURL(resImage);
-                                setPreviewUrl(url);
-                                console.log("Data Image get : "+response.data.productImage);
-                                setProductImage(response.data.productImage);
-                            }else{
-                                console.warn("Gambar tidak ditemukan, menggunakan placeholder.");
-                                setPreviewUrl("/placeholder.png");
-                                setProductImage("");
-                            }
-                        } catch (error) {
-                            console.error("Gagal load image:", error);
+        const token = localStorage.getItem("accessToken");
+        if (!token){
+            return;
+        }
+        try {
+            const response = await getProductValueById(token, idProduct);
+            if(response && response.data){
+                console.log("Success processing data");
+                if (response.data.productImage) {
+                    try {
+                        const resImage = await getLoadImageProduct(token, response.data.productImage);
+                        if (resImage) {
+                            const url = URL.createObjectURL(resImage);
+                            setPreviewUrl(url);
+                            console.log("Data Image get : "+response.data.productImage);
+                            setProductImage(response.data.productImage);
+                        }else{
+                            console.warn("Gambar tidak ditemukan, menggunakan placeholder.");
                             setPreviewUrl("/placeholder.png");
                             setProductImage("");
                         }
-                    } else {
+                    } catch (error) {
+                        console.error("Gagal load image:", error);
                         setPreviewUrl("/placeholder.png");
-                        setProductImage(""); 
+                        setProductImage("");
                     }
-
-                    console.log("Success processing data testttt");
-                    setProductId(response.data.productId);
-                    setProductName(response.data.productName);
-                    setProductDescription(response.data.productDescription);
-                    setProductPrice(response.data.productPrice);
-                    setProductStock(response.data.productStock);
-                    setProductCategoryId(response.data.productCategory.categoryId.toString());
+                } else {
+                    setPreviewUrl("/placeholder.png");
+                    setProductImage(""); 
                 }
-                
-            } catch (error) {
-                console.log("Failed processing data", error);
-                throw error;
+                console.log("Success processing data testttt");
+                setProductName(response.data.productName);
+                setProductDescription(response.data.productDescription);
+                setProductPrice(response.data.productPrice);
+                setProductStock(response.data.productStock);
+                setProductCategoryId(response.data.productCategory.categoryId.toString());
             }
-        }, [idProduct]);
+        } catch (error) {
+            console.log("Failed processing data", error);
+            throw error;
+        }
+    }, [idProduct]);
         
-        useEffect(() => {
-                if (isOpen) {
-                    getProduct();
-                }
-        }, [isOpen, getProduct]);
-
+    useEffect(() => {
+            if (isOpen) {
+                getProduct();
+            }
+    }, [isOpen, getProduct]);
 
     const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -137,7 +123,6 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
             setErrors({ ...errors, productImage: 'Please select a valid image file.' });
         }
     };
-
 
     const getListAllCategory = useCallback(async (): Promise<void> => {
         const token = localStorage.getItem("accessToken");
@@ -169,6 +154,14 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
         }
     }, [getListAllCategory]);
 
+    useEffect(() => {
+        return () => {
+            if (previewUrl) {
+            URL.revokeObjectURL(previewUrl);
+            }
+        };
+    }, [previewUrl]);
+
    
     function validateForm(): boolean{
         console.log("proccess validation");
@@ -194,8 +187,14 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
             valid = false;
         }
 
+        if (!Number.isFinite(productStock) || productStock < 0) {
+            errorsCopy.productStock = "Stock harus berupa angka positif";
+            valid = false;
+        } else {
+            errorsCopy.productStock = '';
+        }
 
-        if (productImage) {
+        if (productImage && (typeof productImage === 'string' || productImage instanceof File)) {
             errorsCopy.productImage = '';
         } else {
             errorsCopy.productImage = 'productImage is required';
@@ -212,24 +211,45 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
         return valid;
     }
 
+    function resetForm() {
+        setProductName("");
+        setProductDescription("");
+        setProductPrice("");
+        setProductStock(0);
+        setProductImage("");
+        setPreviewUrl("");
+        setProductCategoryId("");
+        setErrorsAll("");
+        setErrors({
+            productName: '',
+            productDescription: '',
+            productPrice: '',
+            productStock: '',
+            productImage: '',
+            productCategoryId: ''
+        });
+    }
+
     const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-       
+       setIsLoading(true);
         const token = localStorage.getItem("accessToken");
         if (!token) {
+            setErrorsAll("Anda belum login. Silakan login terlebih dahulu.");
+            setIsLoading(false);
             return;
         }
         if (validateForm()) {
             try {
 
-                if (productId === undefined) {
-                    throw new Error("categoryId is undefined");
+                if (idProduct === undefined) {
+                    throw new Error("productId is undefined");
                 }
 
                 console.log("edit image :"+productImage);
 
                 const newProduct: EditProductDto = {
-                    productId,
+                    productId: idProduct,
                     productName,
                     productDescription,
                     productPrice,
@@ -238,152 +258,134 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
                     productCategoryId
                 };
             
-                const result = await editProduct(token, productId, newProduct);
+                const result = await editProduct(token, idProduct, newProduct);
                 if(result){
                     console.log("success add data", result);
-                    
-                    setProductName("");
-                    setProductDescription("");
-                    setProductPrice("");
-                    setProductStock(0);
-                    setProductImage("");
-                    setProductCategoryId("");
-                    setErrorsAll("");
+                    resetForm();
                     closeModal();
                     onSuccess();
                 }else{
-                    setErrorsAll("Login gagal. Cek email/password.");
+                    setErrorsAll("Gagal update produk. Silakan coba lagi.");
                 }
             } catch (err) {
-                console.error("Gagal login", err);
-                setErrorsAll("Login gagal. Cek email/password.");
+                console.error("Gagal update produk", err);
+                setErrorsAll("Gagal update produk. Silakan coba lagi.");
+            } finally {
+                setIsLoading(false);
             }
         }
-
-        console.log("Saving changes...");
-        closeModal();
     };
 
     return (
         <> 
-         <Dialog open={isOpen} onOpenChange={setIsOpen}>
-         <DialogTrigger asChild>
-           <Button variant="outline" onClick={openModal}>Edit Product</Button>
-         </DialogTrigger>
-         <DialogContent className="sm:max-w-[425px]" >
-           <DialogHeader>
-             <DialogTitle>Edit Product</DialogTitle>
-             <DialogDescription>
-               Make changes to your product here. Click save when you&apos;re
-               done.
-             </DialogDescription>
-           </DialogHeader>
-           <form className={cn("grid items-start gap-6")} onSubmit={handleSave}>
-                {errorsAll && 
-                    <Alert variant="destructive">
-                        <AlertCircleIcon />
-                        <AlertTitle>Unable to process your payment.</AlertTitle>
-                        <AlertDescription>
-                        <p>Please verify your billing information and try again.</p>
-                        {errorsAll}
-                        </AlertDescription>
-                    </Alert>
-                }
-
-                <Input 
-                    id="productId" 
-                    type="hidden" 
-                    value={productId ?? ''}
-                    onChange={(e) => setProductId(Number(e.target.value))}
-                />
-            
-                <div className="grid gap-3">
-                    <Label htmlFor="productName">Product Name</Label>
-                    <Input 
-                        id="productName" 
-                        type="text" 
-                        value={productName} 
-                        onChange={(e) => setProductName(e.target.value)}
-                    />
-                    {errors.productName && <p className="text-red-500 text-sm">{errors.productName}</p>}
-                </div>
-                <div className="grid gap-3">
-                    <Label htmlFor="productDescription">Product Deskripsi</Label>
-                    <Input 
-                        id="productDescription" 
-                        type="text" 
-                        value={productDescription}
-                        onChange={(e) => setProductDescription(e.target.value)}
-                    />
-                    {errors.productDescription && <p className="text-red-500 text-sm">{errors.productDescription}</p>}
-                </div>
-                <div className="grid gap-3">
-                    <Label htmlFor="productPrice">Product Price</Label>
-                    <Input 
-                        id="productPrice" 
-                        type="text" 
-                        value={productPrice}
-                        onChange={(e) => setProductPrice(e.target.value)}
-                    />
-                    {errors.productPrice && <p className="text-red-500 text-sm">{errors.productPrice}</p>}
-                </div>
-
-                <div className="grid gap-3">
-                    <Label htmlFor="productStock">Product Stock</Label>
-                    <Input 
-                        id="productStock" 
-                        type="number" 
-                        value={productStock}
-                        onChange={(e) => setProductStock(Number(e.target.value))}
-                    />
-                    {/* {errors.productStock && <p className="text-red-500 text-sm">{errors.productStock}</p>} */}
-                </div>
-
-                <div className="grid gap-3">
-                    <Label htmlFor="email">Category</Label>
-                    <Select
-                     value={productCategoryId}
-                     onValueChange={(value) => setProductCategoryId(value)}>
-                        <SelectTrigger className="w-full">
-                            <SelectValue placeholder="Select Role" />
-                        </SelectTrigger>
-                        <SelectContent>
-                            {optionsCategory.map((category) => (
-                                <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
-                            ))}
-                        </SelectContent>
-                    </Select>
-                </div>
-                
-                {/* <div className="grid gap-3">
-                    <Label htmlFor="productCategory">Product Category</Label>
-                    <Input id="productCategory" type="text" onChange={(e) => setProductCategoryId(e.target.value)}/>
-                    {errors.productCategoryId && <p className="text-red-500 text-sm">{errors.productCategoryId}</p>}
-                </div> */}
-
-                <div className="grid gap-3">
-                    <Label  htmlFor="productImage">Product Image</Label>
-                    <Input 
-                        id="picture" 
-                        type="file" 
-                        onChange={handleImageChange} 
-                    />
-                        
-                    {productImage && (
-                        <div className='my-2'>
-                            <img 
-                                alt='not found'
-                                width={"150"}
-                                src={previewUrl}
+            <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                <DialogTrigger asChild>
+                    <Button className="bg-blue-700 text-white hover:bg-blue-500 hover:text-white" variant="outline" onClick={openModal}>Edit Product</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]" >
+                    <DialogHeader>
+                        <DialogTitle>Edit Product</DialogTitle>
+                        <DialogDescription>
+                            Make changes to your product here. Click save when you&apos;re done.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form className={cn("grid items-start gap-6")} onSubmit={handleSave}>
+                        {errorsAll && 
+                            <Alert variant="destructive">
+                                <AlertCircleIcon />
+                                <AlertTitle>Gagal update produk</AlertTitle>
+                                <AlertDescription>
+                                {errorsAll}
+                                </AlertDescription>
+                            </Alert>
+                        }
+                        <Input 
+                            id="productId" 
+                            type="hidden" 
+                            value={idProduct ?? ''}
+                        />
+                        <div className="grid gap-3">
+                            <Label htmlFor="productName">Product Name</Label>
+                            <Input 
+                                id="productName" 
+                                type="text" 
+                                value={productName} 
+                                onChange={(e) => setProductName(e.target.value)}
                             />
+                            {errors.productName && <p className="text-red-500 text-sm">{errors.productName}</p>}
                         </div>
-                    )}
-                    {errors.productImage && <div className='invalid-feedback'>{errors.productImage}</div>}
-                </div>
-                <Button type="submit">Save changes</Button>
-            </form>
-         </DialogContent>
-       </Dialog>  
+                        <div className="grid gap-3">
+                            <Label htmlFor="productDescription">Product Deskripsi</Label>
+                            <Input 
+                                id="productDescription" 
+                                type="text" 
+                                value={productDescription}
+                                onChange={(e) => setProductDescription(e.target.value)}
+                            />
+                            {errors.productDescription && <p className="text-red-500 text-sm">{errors.productDescription}</p>}
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="productPrice">Product Price</Label>
+                            <Input 
+                                id="productPrice" 
+                                type="text" 
+                                value={productPrice}
+                                onChange={(e) => setProductPrice(e.target.value)}
+                            />
+                            {errors.productPrice && <p className="text-red-500 text-sm">{errors.productPrice}</p>}
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="productStock">Product Stock</Label>
+                            <Input 
+                                id="productStock" 
+                                type="number" 
+                                value={productStock}
+                                onChange={(e) => {
+                                    const value = e.target.value;
+                                    const parsed = Number(value);
+                                    setProductStock(value === "" ? 0 : parsed);
+                                }}
+                            />
+                            {errors.productStock && (<p className="text-red-500 text-sm">{errors.productStock}</p>)}
+                        </div>
+                        <div className="grid gap-3">
+                            <Label htmlFor="category">Category</Label>
+                            <Select value={productCategoryId} onValueChange={(value) => setProductCategoryId(value)}>
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Select Category" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {optionsCategory.map((category) => (
+                                        <SelectItem key={category.value} value={category.value}>{category.label}</SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                            {errors.productCategoryId && (<p className="text-red-500 text-sm">{errors.productCategoryId}</p>)}
+                        </div>
+                        <div className="grid gap-3">
+                            <Label  htmlFor="productImage">Product Image</Label>
+                            <Input 
+                                id="productImage" 
+                                type="file" 
+                                onChange={handleImageChange} 
+                            />
+                            {previewUrl && (
+                                <div className="my-2">
+                                    <img 
+                                    alt="Preview"
+                                    width={150}
+                                    src={previewUrl}
+                                    />
+                                </div>
+                            )}
+                            {errors.productImage && <p className="text-red-500 text-sm">{errors.productImage}</p>}
+                        </div>
+                        <Button className="bg-blue-700 text-white hover:bg-blue-500 hover:text-white" type="submit" disabled={isLoading}>
+                            {isLoading ? "Update..." : "Update changes"}
+                        </Button>
+                    </form>
+                </DialogContent>
+            </Dialog>  
         </>
     );
 }

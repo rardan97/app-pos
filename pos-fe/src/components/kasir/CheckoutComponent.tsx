@@ -34,7 +34,6 @@ export default function CheckoutComponent({disabled, className, dataCart, }: Buy
     
     const { setTransactionData } = useTransaction();
     const navigate = useNavigate();
-
     const { isOpen, setIsOpen, openModal} = useModal();
     const [customerName, setCustomerName] = useState("");
     const [nameError, setNameError] = useState("");
@@ -47,7 +46,6 @@ export default function CheckoutComponent({disabled, className, dataCart, }: Buy
 
     const total = dataCart.reduce((acc, item) => acc + item.price * item.qty, 0);
 
-
     const handleProceedToCheckout = async () => {
         if (!customerName.trim()) {
             setNameError("Nama customer wajib diisi.");
@@ -57,7 +55,6 @@ export default function CheckoutComponent({disabled, className, dataCart, }: Buy
         const token = localStorage.getItem("accessToken");
         if (!token) return;
 
-        
          const transformed = dataCart.map((item) => ({
             productId: item.id,
             productNama: item.name,
@@ -65,7 +62,6 @@ export default function CheckoutComponent({disabled, className, dataCart, }: Buy
             productQty: String(item.qty),
             productTotalHarga: String(item.price * item.qty),
         }));
-
 
         const payload: CheckoutTransactionReq = {
             customerDto: {
@@ -83,7 +79,6 @@ export default function CheckoutComponent({disabled, className, dataCart, }: Buy
         } catch (error) {
             console.error("Checkout failed:", error);
         }
-
     }
 
     return (

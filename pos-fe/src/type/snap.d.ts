@@ -11,7 +11,6 @@ interface SnapTransactionResult {
   status_message: string;
   transaction_time: string;
   expiry_time: string;
-  // tambahan opsional jika ada
   issuer?: string;
   acquirer?: string;
   settlement_time?: string;

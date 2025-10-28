@@ -16,6 +16,7 @@ import { useModal } from "@/hooks/useModal";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 import { delRoleValueById, getRoleValueById } from "@/api/RoleApi";
+import { MdDelete } from "react-icons/md";
 
 
 type RoleDeleteProps = {
@@ -37,7 +38,7 @@ export default function RoleDelete({onSuccess, idRole} : RoleDeleteProps) {
         try {
             const response = await getRoleValueById(token, idRole);
             if(response && response.data){
-                console.log("Success processing data");
+                console.log("Success processing data : "+response.data.rolePetugasName);
                 setRolePetugasId(response.data.rolePetugasId);
                 setRolePetugasName(response.data.rolePetugasName);
             }
@@ -53,7 +54,6 @@ export default function RoleDelete({onSuccess, idRole} : RoleDeleteProps) {
             }
     }, [isOpen, getRoleById]);
 
-
     const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const token = localStorage.getItem("accessToken");
@@ -65,22 +65,22 @@ export default function RoleDelete({onSuccess, idRole} : RoleDeleteProps) {
         try {
             
             if (rolePetugasId === undefined) {
-                throw new Error("categoryId is undefined");
+                throw new Error("roleId is undefined");
             }
             
             const result = await delRoleValueById(token, rolePetugasId);
             if(result){
-                console.log("success add data", result);
+                console.log("success Delete data", result);
                 setRolePetugasName("");
                 setErrorsAll("");
                 closeModal();
                 onSuccess();
             }else{
-                setErrorsAll("Login gagal. Cek email/password.");
+                setErrorsAll("Failed Delete Role");
             }
         } catch (err) {
-            console.error("Gagal login", err);
-            setErrorsAll("Login gagal. Cek email/password.");
+            console.error("Failed Delete Role", err);
+            setErrorsAll("Failed Delete Role");
         }
         
 
@@ -88,53 +88,53 @@ export default function RoleDelete({onSuccess, idRole} : RoleDeleteProps) {
         closeModal();
     };
 
-
-  return (
-    <Dialog open={isOpen} onOpenChange={setIsOpen}>
-         <DialogTrigger asChild>
-           <Button variant="outline" onClick={openModal}>Delete</Button>
-         </DialogTrigger>
-         <DialogContent className="sm:max-w-[425px]" >
-           <DialogHeader>
-             <DialogTitle>Delete Role</DialogTitle>
-             <DialogDescription>
-               Make changes to your category here. Click save when you&apos;re
-               done.
-             </DialogDescription>
-           </DialogHeader>
-           <form className={cn("grid items-start gap-6")} onSubmit={handleSave}>
-                {errorsAll && 
-                    <Alert variant="destructive">
-                        <AlertCircleIcon />
-                        <AlertTitle>Unable to process your payment.</AlertTitle>
-                        <AlertDescription>
-                        <p>Please verify your billing information and try again.</p>
-                        {errorsAll}
-                        </AlertDescription>
-                    </Alert>
-                }
-
-                <Input 
-                        id="rolePetugasId" 
-                        type="hidden" 
-                        value={rolePetugasId ?? ''}
-                        onChange={(e) => setRolePetugasId(Number(e.target.value))}
-                    />
-            
-                <div className="grid gap-3">
-                    <Label htmlFor="categoryName">Category Name</Label>
+    return (
+        <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+                <MdDelete
+                    className="text-red-500 hover:bg-red-600 hover:text-white p-1 rounded cursor-pointer"
+                    size={30}
+                    onClick={openModal}
+                />
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]" >
+                <DialogHeader>
+                    <DialogTitle>Delete Role</DialogTitle>
+                    <DialogDescription>
+                    Delete to your role here. Click save when you&apos;re
+                    done.
+                    </DialogDescription>
+                </DialogHeader>
+                <form className={cn("grid items-start gap-6")} onSubmit={handleSave}>
+                    {errorsAll && 
+                        <Alert variant="destructive">
+                            <AlertCircleIcon />
+                            <AlertTitle>Unable to process your payment.</AlertTitle>
+                            <AlertDescription>
+                            <p>Please verify your billing information and try again.</p>
+                            {errorsAll}
+                            </AlertDescription>
+                        </Alert>
+                    }
                     <Input 
-                        id="rolePetugasName" 
-                        type="text" 
-                        value={rolePetugasName}
-                        onChange={(e) => setRolePetugasName(e.target.value)}
-                        hidden
+                            id="rolePetugasId" 
+                            type="hidden" 
+                            value={rolePetugasId ?? ''}
+                            onChange={(e) => setRolePetugasId(Number(e.target.value))}
                     />
-                </div>
-                
-                <Button type="submit">Delete</Button>
-            </form>
-         </DialogContent>
-       </Dialog>
-  )
+                    <div className="grid gap-3">
+                        <Label htmlFor="roleName">Role Name</Label>
+                        <Input 
+                            id="roleName" 
+                            type="text" 
+                            value={rolePetugasName}
+                            onChange={(e) => setRolePetugasName(e.target.value)}
+                            disabled
+                        />
+                    </div>
+                    <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" type="submit">Delete</Button>
+                </form>
+            </DialogContent>
+        </Dialog>
+    )
 }

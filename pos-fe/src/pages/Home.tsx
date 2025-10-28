@@ -15,12 +15,8 @@ export default function Home() {
                         <div className="px-4 lg:px-6">
                             <ChartAreaInteractive />
                         </div>
-                        {/* <DataTable data={data} /> */}
                         </div>
                     </div>
-                    </div>
-                <div>
-                    <h1>Hello</h1>
                 </div>
             </Card>
             

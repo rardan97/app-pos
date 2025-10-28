@@ -73,7 +73,6 @@ export async function addProduct(token: string, data: AddProductDto) : Promise<P
     }
 }
 
-
 export async function editProduct(token: string, id : number, data: EditProductDto) : Promise<Product>{
 
     console.log("Image Product : "+data.productImage);
@@ -109,9 +108,6 @@ export async function editProduct(token: string, id : number, data: EditProductD
         throw new Error("Failed to fetch users");
     }
 }
-
-
-
 
 export async function getLoadImageProduct(token: string, filename : File | string) : Promise<Blob>{
     try{

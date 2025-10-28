@@ -41,28 +41,27 @@ const PaymentComponent: React.FC = () => {
         console.log("==================================");
 
         const payload: TransactionReq = {
+            transaction: {
+                transactionId:transactionId,
+                statusCode:Number(statusCode),
+                currency:currency,
+                grossAmount:grossAmount,
+                orderId:orderId,
+                paymentType:paymentType,
+                transactionStatus:transactionStatus,
+                statusMessage:statusMessage,
+                transactionTime:transactionTime,
+                settlementTime:settlementTime
 
-
-            
-        transaction: {
-            transactionId:transactionId,
-            statusCode:Number(statusCode),
-            currency:currency,
-            grossAmount:grossAmount,
-            orderId:orderId,
-            paymentType:paymentType,
-            transactionStatus:transactionStatus,
-            statusMessage:statusMessage,
-            transactionTime:transactionTime,
-            settlementTime:settlementTime
-
-        },
-        transactionItemList: transformed,
+            },
+            transactionItemList: transformed,
         };
 
         try {
             const result = await checkoutTransactionStatus(token, payload);
             console.log("Checkout success:", result?.data?.status);
+
+            
         } catch (error) {
             console.error("Checkout failed:", error);
             alert("Gagal menyimpan transaksi");
@@ -102,11 +101,7 @@ const PaymentComponent: React.FC = () => {
             embedId: "snap-container",
             onSuccess: (result : SnapResult) => {
                 console.log("Snap Success Result:", result);
-
                 console.log("Snap current:", result.currency);
-
-
-
                 const { transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime } = parseSnapResult(result);
                 handleAdToSTransaction(transactionId, statusCode, orderId, currency, grossAmount, paymentType, transactionStatus, statusMessage, transactionTime, settlementTime);
                 setIsSnapOpen(false);
@@ -135,89 +130,83 @@ const PaymentComponent: React.FC = () => {
             <div className="grid grid-cols-1 xl:grid-cols-10 gap-10 items-start">
                 {/* Produk */}
                 <div className="xl:col-span-4 shadow-xl rounded-xl p-8">
-                <h2 className="text-2xl font-bold mb-6 border-b pb-3">Detail Item</h2>
-                <div className="space-y-5 max-h-[700px] overflow-y-auto pr-2">
-                    {transactionData.data?.itemDetails.map((item) => (
-                    <div
-                        key={item.id}
-                        className="flex justify-between items-start rounded-lg p-4 border border-indigo-100"
-                    >
-                        <div>
-                        <h3 className="text-base font-bold">{item.name}</h3>
-                        <p className="text-sm">Qty: {item.quantity}</p>
-                        <p className="text-sm">
-                            Harga: Rp {Number(item.price).toLocaleString()}
-                        </p>
+                    <h2 className="text-2xl font-bold mb-6 border-b pb-3">Detail Item</h2>
+                    <div className="space-y-5 max-h-[700px] overflow-y-auto pr-2">
+                        {transactionData.data?.itemDetails.map((item) => (
+                        <div
+                            key={item.id}
+                            className="flex justify-between items-start rounded-lg p-4 border border-indigo-100"
+                        >
+                            <div>
+                                <h3 className="text-base font-bold">{item.name}</h3>
+                                <p className="text-sm">Qty: {item.quantity}</p>
+                                <p className="text-sm">
+                                    Harga: Rp {Number(item.price).toLocaleString()}
+                                </p>
+                            </div>
+                            <div className="font-bold text-lg">
+                            Rp {(Number(item.price) * Number(item.quantity)).toLocaleString()}
+                            </div>
                         </div>
-                        <div className="font-bold text-lg">
-                        Rp {(Number(item.price) * Number(item.quantity)).toLocaleString()}
-                        </div>
+                        ))}
                     </div>
-                    ))}
-                </div>
                 </div>
 
                 {/* Pembayaran */}
                 <div className="xl:col-span-6 shadow-xl rounded-xl p-8 flex flex-col justify-between">
-                <div>
-                    <h2 className="text-2xl font-bold mb-6 border-b pb-3">Payment</h2>
+                    <div>
+                        <h2 className="text-2xl font-bold mb-6 border-b pb-3">Payment</h2>
 
-                    <div className="space-y-3 mb-4">
-                    <label className="text-lg font-semibold">Customer Details</label>
-                    <div className="space-y-1">
-                        <p className="text-sm">{transactionData.data?.customerDetails.customerName}</p>
-                    </div>
-                    </div>
-
-                    <div className="mb-4 border-t">
-                    <label className="text-lg font-semibold">Items</label>
-                    <ul className="divide-y max-h-64 overflow-y-auto">
-                        {transactionData.data?.itemDetails.map((item) => (
-                        <li key={item.id} className="flex justify-between py-2">
-                            <div>
-                            <p className="font-medium">
-                                {item.name} (x{item.quantity})
-                            </p>
-                            <p className="text-sm">Rp {item.price}</p>
+                        <div className="space-y-3 mb-4">
+                            <label className="text-lg font-semibold">Customer Details</label>
+                            <div className="space-y-1">
+                                <p className="text-sm">{transactionData.data?.customerDetails.customerName}</p>
                             </div>
-                            <div className="font-semibold">
-                            Rp {(Number(item.price) * Number(item.quantity)).toLocaleString()}
+                        </div>
+
+                        <div className="mb-4 border-t">
+                            <label className="text-lg font-semibold">Items</label>
+                            <ul className="divide-y max-h-64 overflow-y-auto">
+                                {transactionData.data?.itemDetails.map((item) => (
+                                <li key={item.id} className="flex justify-between py-2">
+                                    <div>
+                                        <p className="font-medium">
+                                            {item.name} (x{item.quantity})
+                                        </p>
+                                        <p className="text-sm">Rp {item.price}</p>
+                                    </div>
+                                    <div className="font-semibold">
+                                    Rp {(Number(item.price) * Number(item.quantity)).toLocaleString()}
+                                    </div>
+                                </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        <div className="border-t border-indigo-200 pt-4 space-y-2 font-semibold">
+                            <div className="flex justify-between">
+                                <span>Subtotal</span>
+                                <span>Rp {Number(total).toLocaleString()}</span>
                             </div>
-                        </li>
-                        ))}
-                    </ul>
+                            <div className="flex justify-between">
+                                <span>PPN (10%)</span>
+                                <span>Rp {(Number(total) * 0.1).toLocaleString()}</span>
+                            </div>
+                            <div className="flex justify-between text-xl font-bold pt-2">
+                                <span>Total</span>
+                                <span>Rp {(Number(total) * 1.1).toLocaleString()}</span>
+                            </div>
+                        </div>
+                        <button
+                            onClick={handlePayment}
+                            className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow transition duration-300"
+                        >
+                        Payment
+                        </button>
+                        <div className="mt-6">
+                            <div className="w-full max-w-3xl mx-auto" id="snap-container" ref={snapContainerRef}></div>
+                        </div>
                     </div>
-
-                    <div className="border-t border-indigo-200 pt-4 space-y-2 font-semibold">
-                    <div className="flex justify-between">
-                        <span>Subtotal</span>
-                        <span>Rp {Number(total).toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between">
-                        <span>PPN (10%)</span>
-                        <span>Rp {(Number(total) * 0.1).toLocaleString()}</span>
-                    </div>
-                    <div className="flex justify-between text-xl font-bold pt-2">
-                        <span>Total</span>
-                        <span>Rp {(Number(total) * 1.1).toLocaleString()}</span>
-                    </div>
-                    </div>
-
-                    <button
-                        onClick={handlePayment}
-                        className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow transition duration-300"
-                    >
-                    Payment
-                    </button>
-
-                    <div className="mt-6">
-                    <div
-                        className="w-full max-w-3xl mx-auto"
-                        id="snap-container"
-                        ref={snapContainerRef}
-                    ></div>
-                    </div>
-                </div>
                 </div>
             </div>
         </div>

@@ -5,7 +5,6 @@ import {
     CircleUser,
     Copy,
     Link,
-    Star,
 } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
@@ -49,9 +48,9 @@ export function NavActions() {
     return (
         <div className="flex items-center gap-4 text-sm">
             <ModeToggle />
-            <Button variant="ghost" size="icon" className="h-7 w-7">
+            {/* <Button variant="ghost" size="icon" className="h-7 w-7">
                 <Star />
-            </Button>
+            </Button> */}
             <Popover open={isOpen} onOpenChange={setIsOpen}>
                 <PopoverTrigger asChild>
                 <Button

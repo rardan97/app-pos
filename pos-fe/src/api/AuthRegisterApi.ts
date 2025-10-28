@@ -29,8 +29,6 @@ export async function getListRoleAuth() : Promise<ApiResponse<Role[]>>{
                 "Content-Type": "application/json"
             },
         });
-
-      
         return response.data;
     }catch(error){
         console.error("Error during user fetch:", error);

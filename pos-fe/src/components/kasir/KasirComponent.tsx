@@ -28,8 +28,6 @@ export default function KasirComponent() {
 
         try {
             const response = await getListProduct(token);
-            
-        
             if(response && response.data){
                 
                 const productsWithImages: ProductWithImageUrl[] = await Promise.all(
@@ -128,7 +126,7 @@ export default function KasirComponent() {
                     <section className="mb-8"> 
                         <div>
                             <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-300 pb-2">Makanan</h2>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                            <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-2 gap-6">
                             {makanan.map((item) => (
                                 <Card
                                     key={item.productId}
@@ -142,15 +140,15 @@ export default function KasirComponent() {
                                     <div className="p-5 flex flex-col flex-grow">
                                         <p className="text-base font-semibold  mb-1">{item.productName}</p>
                                         <p className="text-sm mb-4 line-clamp-3">{item.productDescription}</p>
-                                        <div className="flex items-center justify-between">
-                                        <p className="text-sm ">
-                                            Rp{Number(item.productPrice).toLocaleString()}
-                                        </p>
-                                        <button
+                                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+                                            <p className="text-sm">
+                                                Rp{Number(item.productPrice).toLocaleString()}
+                                            </p>
+                                            <button
                                                 onClick={() => handleAddToCart(item)}
                                                 className="flex items-center gap-2 bg-green-500 hover:bg-green-600 active:scale-95  text-sm font-semibold px-5 py-2 rounded-full shadow-md transition-transform duration-150"
                                             >
-                                                <Plus className="w-4 h-4" />
+                                            <Plus className="w-4 h-4" />
                                                 Tambah
                                             </button>
                                         </div>

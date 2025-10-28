@@ -24,13 +24,12 @@ type ProductDeleteProps = {
 };
 
 export default function ProductDelete({onSuccess, idProduct} : ProductDeleteProps) {
-
     const { isOpen, setIsOpen, openModal, closeModal } = useModal();
-    const [productId, setProductId] = useState<number>();  
     const [productName, setProductName] = useState<string>("");
     const [errorsAll, setErrorsAll] = useState<string>("");
+    const [isLoading, setIsLoading] = useState(false);
 
-    const getCategoryById = useCallback(async (): Promise<void> => {
+    const getProductById = useCallback(async (): Promise<void> => {
             const token = localStorage.getItem("accessToken");
             if (!token){
                 return;
@@ -39,7 +38,6 @@ export default function ProductDelete({onSuccess, idProduct} : ProductDeleteProp
                 const response = await getProductValueById(token, idProduct);
                 if(response && response.data){
                     console.log("Success processing data");
-                    setProductId(response.data.productId);
                     setProductName(response.data.productName);
                 }
             } catch (error) {
@@ -50,87 +48,84 @@ export default function ProductDelete({onSuccess, idProduct} : ProductDeleteProp
         
         useEffect(() => {
                 if (isOpen) {
-                    getCategoryById();
+                    getProductById();
                 }
-        }, [isOpen, getCategoryById]);
+        }, [isOpen, getProductById]);
 
    
-    const handleSave = async (e: React.FormEvent<HTMLFormElement>) => {
+    const handleDelete = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+        setIsLoading(true);
         const token = localStorage.getItem("accessToken");
         if (!token) {
+            setErrorsAll("Anda belum login. Silakan login terlebih dahulu.");
+            setIsLoading(false);
             return;
         }
        
         console.log("success validation");
         try {
-            if (productId === undefined) {
-                throw new Error("categoryId is undefined");
+            if (idProduct === undefined) {
+                throw new Error("productById is undefined");
             }
             
-            const result = await delProductValueById(token, productId);
+            const result = await delProductValueById(token, idProduct);
             if(result){
-                console.log("success add data", result);
+                console.log("success delete data", result);
                 setProductName("");
                 setErrorsAll("");
                 closeModal();
                 onSuccess();
             }else{
-                setErrorsAll("Login gagal. Cek email/password.");
+                setErrorsAll("Gagal delete produk. Silakan coba lagi.");
             }
         } catch (err) {
-            console.error("Gagal login", err);
-            setErrorsAll("Login gagal. Cek email/password.");
-        }
-
-        console.log("Saving changes...");
-        closeModal();
+            console.error("Gagal delete produk", err);
+            setErrorsAll("Gagal delete produk. Silakan coba lagi.");
+        } finally {
+                setIsLoading(false);
+            }
     };
 
 
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-            <Button variant="outline" onClick={openModal}>Delete</Button>
+            <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" variant="destructive" onClick={openModal}>Delete Product</Button>
         </DialogTrigger>
-        <DialogContent className="sm:max-w-[425px]" >
+        <DialogContent className="sm:max-w-[425px]">
             <DialogHeader>
                 <DialogTitle>Delete Product</DialogTitle>
                 <DialogDescription>
-                Make changes to your Product here. Click save when you&apos;re
-                done.
+                    Apakah Anda yakin ingin menghapus produk ini? Tindakan ini tidak dapat dibatalkan.
                 </DialogDescription>
             </DialogHeader>
-            <form className={cn("grid items-start gap-6")} onSubmit={handleSave}>
+            <form className={cn("grid items-start gap-6")} onSubmit={handleDelete}>
                 {errorsAll && 
                     <Alert variant="destructive">
                         <AlertCircleIcon />
-                        <AlertTitle>Unable to process your payment.</AlertTitle>
+                        <AlertTitle>Gagal Delete produk</AlertTitle>
                         <AlertDescription>
-                        <p>Please verify your billing information and try again.</p>
                         {errorsAll}
                         </AlertDescription>
                     </Alert>
                 }
-
-                <Input 
-                    id="categoryId" 
+                <Input
                     type="hidden" 
-                    value={productId ?? ''}
-                    onChange={(e) => setProductId(Number(e.target.value))}
+                    value={idProduct ?? ''}
                 />
-
                 <div className="grid gap-3">
                     <Label htmlFor="productName">Product Name</Label>
                     <Input 
                         id="productName" 
                         type="text" 
                         value={productName}
-                        onChange={(e) => setProductName(e.target.value)}
                         disabled 
                     />
                 </div>
-                <Button type="submit">Delete</Button>
+                <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" type="submit" variant="destructive" disabled={isLoading}>
+                    {isLoading ? "Delete..." : "Delete"}
+                </Button>
             </form>
         </DialogContent>
     </Dialog>

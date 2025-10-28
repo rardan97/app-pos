@@ -26,18 +26,10 @@ interface Errors {
 }
 
 export default function CategoryAdd({ onSuccess }: { onSuccess: () => void }) {
-
-    
     const [categoryName, setCategoryName] = useState<string>("");
     const [categoryDescription, setCategoryDescription] = useState<string>("");
     const [errorsAll, setErrorsAll] = useState<string>("");
-
-    
     const { isOpen, setIsOpen, openModal, closeModal } = useModal();
-
-    // const [open, setOpen] = React.useState(false)
-//   const isDesktop = useMediaQuery("(min-width: 768px)")
-
     const [errors, setErrors] = useState<Errors>({
         categoryName: '',
         categoryDescription: ''
@@ -50,14 +42,14 @@ export default function CategoryAdd({ onSuccess }: { onSuccess: () => void }) {
         if(categoryName.trim()){
             errorsCopy.categoryName = '';
         }else{
-            errorsCopy.categoryName = 'email is required';
+            errorsCopy.categoryName = 'name is required';
             valid = false;
         }
     
         if(categoryDescription.trim()){
             errorsCopy.categoryDescription = '';
         }else{
-            errorsCopy.categoryDescription = 'password is required';
+            errorsCopy.categoryDescription = 'description is required';
             valid = false;
         }
         setErrors(errorsCopy);
@@ -80,18 +72,18 @@ export default function CategoryAdd({ onSuccess }: { onSuccess: () => void }) {
             
                 const result = await addCategories(token, newCategory);
                 if(result){
-                    console.log("success add data", result);
+                    console.log("success create category : ", result);
                     setCategoryName("");
                     setCategoryDescription("");
                     setErrorsAll("");
                     closeModal();
                     onSuccess();
                 }else{
-                    setErrorsAll("Login gagal. Cek email/password.");
+                    setErrorsAll("Failed create category");
                 }
             } catch (err) {
-                console.error("Gagal login", err);
-                setErrorsAll("Login gagal. Cek email/password.");
+                console.error("Failed create category : ", err);
+                setErrorsAll("Failed create category");
             }
         }
 
@@ -103,7 +95,7 @@ export default function CategoryAdd({ onSuccess }: { onSuccess: () => void }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
-           <Button variant="outline" onClick={openModal}>Add Category</Button>
+           <Button className="bg-green-600 text-white hover:bg-green-400 hover:text-white" variant="outline" onClick={openModal}>Add Category</Button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-[425px]" >
            <DialogHeader>
@@ -134,7 +126,7 @@ export default function CategoryAdd({ onSuccess }: { onSuccess: () => void }) {
                     <Label htmlFor="categoryDescription">Category Deskripsi</Label>
                     <Input id="categoryDescription" type="text" onChange={(e) => setCategoryDescription(e.target.value)}/>
                 </div>
-                <Button type="submit">Save changes</Button>
+                <Button className="bg-green-600 text-white hover:bg-green-400 hover:text-white" type="submit">Save changes</Button>
             </form>
          </DialogContent>
        </Dialog>

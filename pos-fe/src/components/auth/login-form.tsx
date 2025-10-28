@@ -2,12 +2,11 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { signInAuth } from "@/api/AuthLoginApi";
 import { AlertCircleIcon } from "lucide-react"
-
 import {
   Alert,
   AlertDescription,
@@ -36,8 +35,19 @@ export function LoginForm() {
     });
     const [errorsAll, setErrorsAll] = useState<string>("");
 
+    const [isLoading, setIsLoading] = useState(false);
+
+    useEffect(() => {
+        const token = localStorage.getItem("accessToken");
+        if (token) {
+            navigate("/");
+        }
+    }, [navigate]);
+
     async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
+        setErrorsAll("");
+        setIsLoading(true);
         if (validateForm()) {
             try {
                 const result = await signInAuth({ username, password});
@@ -60,7 +70,11 @@ export function LoginForm() {
             } catch (err) {
                 console.error("Gagal login", err);
                 setErrorsAll("Login gagal. Cek email/password.");
+            }finally {
+                setIsLoading(false);
             }
+        }else {
+            setIsLoading(false);
         }
     }
 
@@ -85,48 +99,59 @@ export function LoginForm() {
         return valid;
     }
 
-
-  return (
-    <form className={cn("flex flex-col gap-6")} onSubmit={handleSubmit}>
-        <div className="flex flex-col items-center gap-2 text-center">
-            <h1 className="text-2xl font-bold">Login to your account</h1>
-            <p className="text-muted-foreground text-sm text-balance">
-            Enter your email below to login to your account
-            </p>
-        </div>
-        {errorsAll && 
-            <Alert variant="destructive">
-                <AlertCircleIcon />
-                <AlertTitle>Unable to process your payment.</AlertTitle>
-                <AlertDescription>
-                <p>Please verify your billing information and try again.</p>
-                {errorsAll}
-                </AlertDescription>
-            </Alert>
-        }
-        <div className="grid gap-6">
-            <div className="grid gap-3">
-                <Label htmlFor="email">Username</Label>
-                <Input id="username" type="text" onChange={(e) => setUsername(e.target.value)} required />
-                {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
+    return (
+        <form className={cn("flex flex-col gap-6")} onSubmit={handleSubmit}>
+            <div className="flex flex-col items-center gap-2 text-center">
+                <h1 className="text-2xl font-bold">Login to your account</h1>
+                <p className="text-muted-foreground text-sm text-balance">
+                Enter your Username & Password below to login to your account
+                </p>
             </div>
-            <div className="grid gap-3">
-                <Label htmlFor="email">Password</Label>
-                <Input id="password" type="password" onChange={(e) => setPassword(e.target.value)} required />
-                {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+            {errorsAll && 
+                <Alert variant="destructive">
+                    <AlertCircleIcon className="text-red-500"/>
+                    <AlertTitle>Login gagal</AlertTitle>
+                    <AlertDescription>
+                        <span>{errorsAll}</span>
+                    </AlertDescription>
+                </Alert>
+            }
+            <div className="grid gap-6">
+                <div className="grid gap-3">
+                    <Label htmlFor="username">Username</Label>
+                    <Input 
+                        id="username" 
+                        type="text" 
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)} 
+                        required 
+                        autoFocus
+                    />
+                    {errors.username && <p className="text-red-500 text-sm">{errors.username}</p>}
+                </div>
+                <div className="grid gap-3">
+                    <Label htmlFor="password">Password</Label>
+                    <Input 
+                        id="password" 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)} 
+                        required 
+                    />
+                    {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
+                </div>
+                
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                {isLoading ? "Logging in..." : "Login"}
+                </Button>
+                
             </div>
-            
-            <Button type="submit" className="w-full">
-            Login
-            </Button>
-            
-        </div>
-        <div className="text-center text-sm">
-            Don&apos;t have an account?{" "}
-            <a href="/register" className="underline underline-offset-4">
-            Sign up
-            </a>
-        </div>
-    </form>
-  )
+            <div className="text-center text-sm">
+                Don&apos;t have an account?{" "}
+                <Link to="/register" className="underline underline-offset-4">
+                    Sign up
+                </Link>
+            </div>
+        </form>
+    )
 }

@@ -25,11 +25,11 @@ export async function getDataTransactionListAll(token: string) : Promise<ApiResp
     }
 }
 
-export async function getCategoryValueById(token: string, id : number) : Promise<ApiResponse<Category> | null>{
+export async function getDataTransactionById(token: string, id : string) : Promise<ApiResponse<DataTransactionDto> | null>{
     console.log("check token :"+token);
     console.log("check id :"+id);
     try{
-        const response = await api.get<ApiResponse<Category>>(`/category/getCategoryFindById/${id}`, {
+        const response = await api.get<ApiResponse<DataTransactionDto>>(`/data-transaction/getDataTransactionById/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,

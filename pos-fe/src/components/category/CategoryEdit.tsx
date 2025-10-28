@@ -32,21 +32,11 @@ interface Errors {
 }
 
 export default function CategoryEdit({onSuccess, idCat} : CategoryEditProps) {
-
-    
-
     const { isOpen, setIsOpen, openModal, closeModal } = useModal();
-
     const [categoryId, setCategoryId] = useState<number>();  
     const [categoryName, setCategoryName] = useState<string>("");
     const [categoryDescription, setCategoryDescription] = useState<string>("");
     const [errorsAll, setErrorsAll] = useState<string>("");
-
-    
-    
-
-    // const [open, setOpen] = React.useState(false)
-//   const isDesktop = useMediaQuery("(min-width: 768px)")
 
     const [errors, setErrors] = useState<Errors>({
         categoryName: '',
@@ -122,18 +112,18 @@ export default function CategoryEdit({onSuccess, idCat} : CategoryEditProps) {
                 
                 const result = await editCategories(token, categoryId, newCategory);
                 if(result){
-                    console.log("success add data", result);
+                    console.log("success update category : ", result);
                     setCategoryName("");
                     setCategoryDescription("");
                     setErrorsAll("");
                     closeModal();
                     onSuccess();
                 }else{
-                    setErrorsAll("Login gagal. Cek email/password.");
+                    setErrorsAll("Failed update category");
                 }
             } catch (err) {
-                console.error("Gagal login", err);
-                setErrorsAll("Login gagal. Cek email/password.");
+                console.error("Failed update category : ", err);
+                setErrorsAll("Failed update category");
             }
         }
 
@@ -145,7 +135,7 @@ export default function CategoryEdit({onSuccess, idCat} : CategoryEditProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
-           <Button variant="outline" onClick={openModal}>Edit</Button>
+           <Button className="lg:mx-2 bg-blue-700 text-white hover:bg-blue-500 hover:text-white" variant="outline" onClick={openModal}>Edit Category</Button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-[425px]" >
            <DialogHeader>
@@ -192,7 +182,7 @@ export default function CategoryEdit({onSuccess, idCat} : CategoryEditProps) {
                         value={categoryDescription}
                         onChange={(e) => setCategoryDescription(e.target.value)}/>
                 </div>
-                <Button type="submit">Save changes</Button>
+                <Button className="bg-blue-700 text-white hover:bg-blue-500 hover:text-white" type="submit">Save changes</Button>
             </form>
          </DialogContent>
        </Dialog>

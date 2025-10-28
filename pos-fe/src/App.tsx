@@ -23,9 +23,6 @@ function App() {
     <>
      <AuthProvider>
       <TransactionProvider>
-
-      
-      
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
