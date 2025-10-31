@@ -16,6 +16,7 @@ import { useModal } from "@/hooks/useModal";
 import { delCategoryValueById, getCategoryValueById } from "@/api/CategoryApi";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircleIcon } from "lucide-react";
+import { MdDelete } from "react-icons/md";
 
 
 type CategoryDeleteProps = {
@@ -91,7 +92,13 @@ export default function CategoryDelete({onSuccess, idCat} : CategoryDeleteProps)
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-            <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" variant="outline" onClick={openModal}>Delete Category</Button>
+            <button  onClick={openModal} className="flex items-center text-sm bg-[#d10c57] hover:bg-[#ee065f] dark:bg-[#8a0638] dark:hover:bg-[#af0647] text-white  hover:text-white px-5 rounded">
+                            <MdDelete
+                                className="text-white hover:text-white cursor-pointer"
+                                size={17}
+                                onClick={openModal}
+                            />
+                        </button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]" >
             <DialogHeader>
@@ -130,7 +137,7 @@ export default function CategoryDelete({onSuccess, idCat} : CategoryDeleteProps)
                         disabled 
                     />
                 </div>
-                <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" type="submit">Delete</Button>
+                <Button className="bg-[#d10c57] hover:bg-[#ee065f] dark:bg-[#8a0638] dark:hover:bg-[#af0647] text-white  hover:text-white" type="submit">Delete</Button>
             </form>
         </DialogContent>
     </Dialog>

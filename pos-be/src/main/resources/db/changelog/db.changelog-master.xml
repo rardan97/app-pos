@@ -1,0 +1,200 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+       http://www.liquibase.org/xml/ns/dbchangelog
+       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.9.xsd">
+
+    <!-- 1. Create tb_role_petugas -->
+    <changeSet id="1" author="rardan97">
+        <createTable tableName="tb_role_petugas">
+            <column name="role_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="role_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_desc" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 2. Insert data tb_role_petugas -->
+    <changeSet id="2" author="rardan97">
+        <insert tableName="tb_role_petugas">
+            <column name="role_name" value="admin"/>
+            <column name="role_desc" value="role admin"/>
+        </insert>
+        <insert tableName="tb_role_petugas">
+            <column name="role_name" value="karyawan"/>
+            <column name="role_desc" value="role karyawan"/>
+        </insert>
+    </changeSet>
+
+    <!-- 3. Create tb_petugas -->
+    <changeSet id="3" author="rardan97">
+        <createTable tableName="tb_petugas">
+            <column name="petugas_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="petugas_full_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="petugas_email" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="petugas_username" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="petugas_password" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="role_petugas_id" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="tb_petugas" baseColumnNames="role_petugas_id"
+                                 referencedTableName="tb_role_petugas" referencedColumnNames="role_id"
+                                 constraintName="fk_role_petugas"/>
+    </changeSet>
+
+    <!-- 5. Create tb_refresh_token_petugas -->
+    <changeSet id="5" author="rardan97">
+        <createTable tableName="tb_refresh_token_petugas">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="petugas_id" type="BIGINT">
+                <constraints unique="true"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false" unique="true"/>
+            </column>
+            <column name="expiry_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="tb_refresh_token_petugas" baseColumnNames="petugas_id"
+                                 referencedTableName="tb_petugas" referencedColumnNames="petugas_id"
+                                 constraintName="fk_petugas"/>
+    </changeSet>
+
+    <!-- 6. Create tb_token_petugas -->
+    <changeSet id="6" author="rardan97">
+        <createTable tableName="tb_token_petugas">
+            <column name="id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="petugas_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="token" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_active" type="BOOLEAN" defaultValueBoolean="true">
+                <constraints nullable="false"/>
+            </column>
+            <column name="expiry_date" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- 7. Create tb_category -->
+    <changeSet id="7" author="rardan97">
+        <createTable tableName="tb_category">
+            <column name="category_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="category_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_description" type="VARCHAR(500)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- 8. Insert data tb_category -->
+    <changeSet id="8" author="rardan97">
+        <insert tableName="tb_category">
+            <column name="category_name" value="makanan"/>
+            <column name="category_description" value="Kategori untuk makanan"/>
+        </insert>
+        <insert tableName="tb_category">
+            <column name="category_name" value="minuman"/>
+            <column name="category_description" value="Kategori untuk minuman"/>
+        </insert>
+    </changeSet>
+
+    <!-- 9. Create tb_product -->
+    <changeSet id="9" author="rardan97">
+        <createTable tableName="tb_product">
+            <column name="product_id" type="BIGSERIAL">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="product_name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="product_description" type="VARCHAR(500)"/>
+            <column name="product_price" type="VARCHAR(100)"/>
+            <column name="product_stock" type="INT"/>
+            <column name="product_image" type="VARCHAR(255)"/>
+            <column name="category_id" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="tb_product" baseColumnNames="category_id"
+                                 referencedTableName="tb_category" referencedColumnNames="category_id"
+                                 constraintName="fk_product_category"/>
+    </changeSet>
+
+    <!-- 10. Create tb_transaction -->
+    <changeSet id="10" author="rardan97">
+        <createTable tableName="tb_transaction">
+            <column name="id" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transaction_id" type="VARCHAR(100)"/>
+            <column name="token" type="VARCHAR(255)"/>
+            <column name="status_code" type="INT"/>
+            <column name="gross_amount" type="VARCHAR(100)"/>
+            <column name="currency" type="VARCHAR(10)"/>
+            <column name="order_id" type="VARCHAR(100)"/>
+            <column name="payment_type" type="VARCHAR(100)"/>
+            <column name="transaction_status" type="VARCHAR(100)"/>
+            <column name="fraud_status" type="VARCHAR(100)"/>
+            <column name="status_message" type="VARCHAR(255)"/>
+            <column name="issuer" type="VARCHAR(100)"/>
+            <column name="acquirer" type="VARCHAR(100)"/>
+            <column name="transaction_time" type="TIMESTAMP"/>
+            <column name="settlement_time" type="TIMESTAMP"/>
+            <column name="expiry_time" type="TIMESTAMP"/>
+            <column name="petugas_id" type="BIGINT"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="tb_transaction" baseColumnNames="petugas_id"
+                                 referencedTableName="tb_petugas" referencedColumnNames="petugas_id"
+                                 constraintName="fk_transaction_petugas"/>
+    </changeSet>
+
+    <!-- 11. Create tb_transaction_item -->
+    <changeSet id="11" author="rardan97">
+        <createTable tableName="tb_transaction_item">
+            <column name="transaction_item_id" type="CHAR(36)">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="transaction_id" type="CHAR(36)"/>
+            <column name="product_id" type="BIGINT"/>
+            <column name="qty" type="INT"/>
+            <column name="sub_total_amount" type="VARCHAR(100)"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="tb_transaction_item" baseColumnNames="transaction_id"
+                                 referencedTableName="tb_transaction" referencedColumnNames="id"
+                                 constraintName="fk_transaction_item_transaction"/>
+        <addForeignKeyConstraint baseTableName="tb_transaction_item" baseColumnNames="product_id"
+                                 referencedTableName="tb_product" referencedColumnNames="product_id"
+                                 constraintName="fk_transaction_item_product"/>
+    </changeSet>
+
+</databaseChangeLog>

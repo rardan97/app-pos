@@ -8,17 +8,6 @@ export const api = axios.create({
     withCredentials: true
 });
 
-// export async function signInAuth(data: SignInReq): Promise<{ data: SignInRes | null }> {
-//     console.log("login hit api");
-//     try{
-//         const response = await axios.post<SignInRes>(`${REST_API_BASE_URL_AUTH}/signin`, data);
-//         console.log(response.data.data);
-//         return { data: response.data };
-//     }catch (error){
-//         console.error("Login failed:", error);
-//         return { data: null };
-//     }
-// }
 
 export async function signInAuth(data: SignInReq): Promise<ApiResponse<SignInRes> | null> {
   try {

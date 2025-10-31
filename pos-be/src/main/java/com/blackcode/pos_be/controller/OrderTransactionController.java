@@ -1,7 +1,7 @@
 package com.blackcode.pos_be.controller;
 
 
-import com.blackcode.pos_be.common.dto.ApiResponse;
+import com.blackcode.pos_be.utils.ApiResponse;
 import com.blackcode.pos_be.dto.checkout_transaction.checkout_transaction_req.CheckoutTransactionReq;
 import com.blackcode.pos_be.dto.checkout_transaction.checkout_transaction_res.CheckoutTransactionRes;
 import com.blackcode.pos_be.dto.transaction.TransactionReq;

@@ -7,12 +7,16 @@ import com.blackcode.pos_be.exception.DuplicateResourceException;
 import com.blackcode.pos_be.model.Category;
 import com.blackcode.pos_be.repository.CategoryRepository;
 import com.blackcode.pos_be.service.CategoryService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
 @Service
 public class CategoryServiceImpl implements CategoryService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CategoryServiceImpl.class);
 
     private final CategoryRepository categoryRepository;
 

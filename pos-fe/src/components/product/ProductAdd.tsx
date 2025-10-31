@@ -18,6 +18,7 @@ import { Input } from "../ui/input";
 import type { AddProductDto } from "@/interface/Product.interface";
 import { Label } from "@radix-ui/react-label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { MdAdd } from "react-icons/md";
 
 type OptionCategory = {
   value: string;
@@ -220,7 +221,10 @@ export default function ProductAdd({ onSuccess }: { onSuccess: () => void }) {
         <> 
          <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
-           <Button className="bg-green-600 text-white hover:bg-green-400 hover:text-white" variant="outline" onClick={openModal}>Add Product</Button>
+            <button  onClick={openModal} className="flex items-center gap-2 text-sm bg-green-600 hover:bg-green-500 text-white  hover:text-white   p-2 rounded">             
+                <MdAdd className="text-white hover:text-white rounded cursor-pointer" size={20} />
+                Add Product
+            </button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-[425px]" >
            <DialogHeader>
@@ -318,7 +322,7 @@ export default function ProductAdd({ onSuccess }: { onSuccess: () => void }) {
                     )}
                     {errors.productImage && <p className="text-red-500 text-sm">{errors.productImage}</p>}
                 </div>
-                <Button className="bg-green-600 text-white hover:bg-green-400 hover:text-white" type="submit" disabled={isLoading}>
+                <Button className="bg-green-600 hover:bg-green-500 text-white hover:text-white rounded" type="submit" disabled={isLoading}>
                     {isLoading ? "Saving..." : "Save changes"}
                 </Button>
             </form>

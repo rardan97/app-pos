@@ -2,11 +2,14 @@ import { checkoutTransactionStatus } from "@/api/KasirApi";
 import { useTransaction } from "@/context/TransactionContext";
 import type { TransactionItemDto, TransactionReq } from "@/interface/Transaction.interface";
 import { useRef, useState } from "react";
+import { Card } from "../ui/card";
+import { useNavigate } from "react-router-dom";
 
 const PaymentComponent: React.FC = () => {
     const snapContainerRef = useRef<HTMLDivElement>(null);
     const { transactionData } = useTransaction();
     const [isSnapOpen, setIsSnapOpen] = useState<boolean>(false);
+    const navigate = useNavigate();
 
     if (!transactionData) return <p>Tidak ada data transaksi.</p>;
 
@@ -61,7 +64,10 @@ const PaymentComponent: React.FC = () => {
             const result = await checkoutTransactionStatus(token, payload);
             console.log("Checkout success:", result?.data?.status);
 
-            
+            if(result?.data?.status == "settelment"){
+                navigate("/kasir");
+            }
+
         } catch (error) {
             console.error("Checkout failed:", error);
             alert("Gagal menyimpan transaksi");
@@ -126,23 +132,21 @@ const PaymentComponent: React.FC = () => {
     };
 
     return (
-        <div className="max-w-screen-2xl mx-auto px-6 py-12">
-            <div className="grid grid-cols-1 xl:grid-cols-10 gap-10 items-start">
+        <div className="w-full xl:px-30 px-10 py-12">
+            <div className="grid grid-cols-1 xl:grid-cols-12 gap-10 items-start">
                 {/* Produk */}
-                <div className="xl:col-span-4 shadow-xl rounded-xl p-8">
-                    <h2 className="text-2xl font-bold mb-6 border-b pb-3">Detail Item</h2>
-                    <div className="space-y-5 max-h-[700px] overflow-y-auto pr-2">
+                <Card className="xl:col-span-4 md:col-span-6 sm:col-span-12 shadow-xl rounded-xl p-8 dark:bg-[#010d2b]">
+                    <h2 className="text-2xl font-bold border-b pb-3">Detail Item</h2>
+                    <div className="space-y-5 max-h-[700px] overflow-y-auto">
                         {transactionData.data?.itemDetails.map((item) => (
                         <div
                             key={item.id}
-                            className="flex justify-between items-start rounded-lg p-4 border border-indigo-100"
+                            className="flex justify-between items-start border-b py-4 text-gray-700 dark:text-gray-200"
                         >
                             <div>
-                                <h3 className="text-base font-bold">{item.name}</h3>
+                                <h2 className=" ">{item.name}</h2>
                                 <p className="text-sm">Qty: {item.quantity}</p>
-                                <p className="text-sm">
-                                    Harga: Rp {Number(item.price).toLocaleString()}
-                                </p>
+                                
                             </div>
                             <div className="font-bold text-lg">
                             Rp {(Number(item.price) * Number(item.quantity)).toLocaleString()}
@@ -150,10 +154,10 @@ const PaymentComponent: React.FC = () => {
                         </div>
                         ))}
                     </div>
-                </div>
+                </Card>
 
                 {/* Pembayaran */}
-                <div className="xl:col-span-6 shadow-xl rounded-xl p-8 flex flex-col justify-between">
+                <Card className="xl:col-span-8 md:col-span-6 sm:col-span-12 shadow-xl rounded-xl p-8 flex flex-col justify-between text-gray-700 dark:bg-[#010d2b] dark:text-gray-200">
                     <div>
                         <h2 className="text-2xl font-bold mb-6 border-b pb-3">Payment</h2>
 
@@ -166,7 +170,7 @@ const PaymentComponent: React.FC = () => {
 
                         <div className="mb-4 border-t">
                             <label className="text-lg font-semibold">Items</label>
-                            <ul className="divide-y max-h-64 overflow-y-auto">
+                            <ul className="divide-y max-h-64 overflow-y-auto ">
                                 {transactionData.data?.itemDetails.map((item) => (
                                 <li key={item.id} className="flex justify-between py-2">
                                     <div>
@@ -183,31 +187,31 @@ const PaymentComponent: React.FC = () => {
                             </ul>
                         </div>
 
-                        <div className="border-t border-indigo-200 pt-4 space-y-2 font-semibold">
+                        <div className="pt-4 pb-7 space-y-2 font-semibold border-t">
                             <div className="flex justify-between">
                                 <span>Subtotal</span>
                                 <span>Rp {Number(total).toLocaleString()}</span>
                             </div>
-                            <div className="flex justify-between">
+                            <div className="flex justify-between ">
                                 <span>PPN (10%)</span>
                                 <span>Rp {(Number(total) * 0.1).toLocaleString()}</span>
                             </div>
-                            <div className="flex justify-between text-xl font-bold pt-2">
+                            <div className="flex justify-between text-xl font-bold pt-2  border-t">
                                 <span>Total</span>
                                 <span>Rp {(Number(total) * 1.1).toLocaleString()}</span>
                             </div>
                         </div>
                         <button
                             onClick={handlePayment}
-                            className="w-full mt-6 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-3 rounded-lg shadow transition duration-300"
+                            className="w-full mt-6 bg-green-600 hover:bg-green-500 text-white hover:text-white  rounded  font-semibold py-3 shadow transition duration-300"
                         >
                         Payment
                         </button>
-                        <div className="mt-6">
-                            <div className="w-full max-w-3xl mx-auto" id="snap-container" ref={snapContainerRef}></div>
+                        <div className="mt-10">
+                            <div className="w-full mx-auto" id="snap-container" ref={snapContainerRef}></div>
                         </div>
                     </div>
-                </div>
+                </Card>
             </div>
         </div>
     );

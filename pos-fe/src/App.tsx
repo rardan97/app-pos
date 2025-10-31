@@ -8,7 +8,6 @@ import Product from './pages/Product'
 import Role from './pages/Role'
 import Petugas from './pages/Petugas'
 import Login from './pages/Auth/Login'
-import Register from './pages/Auth/Register'
 import { AuthProvider } from './context/AuthContext'
 import PrivateRoute from './utils/PrivateRoute'
 import Kasir from './pages/Kasir'
@@ -25,7 +24,7 @@ function App() {
       <TransactionProvider>
       <Routes>
         <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
+        {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/" element={
           <PrivateRoute>
             <AppLayout />

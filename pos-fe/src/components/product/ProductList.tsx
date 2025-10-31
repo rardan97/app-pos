@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
 
 import type { Product } from "@/interface/Product.interface";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent } from "../ui/card";
 import { getListProduct } from "@/api/ProductApi";
 import ProductAdd from "./ProductAdd";
 import ProductEdit from "./ProductEdit";
@@ -15,6 +15,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination"
+import ProductDetail from "./ProductDetail";
 
 
 export default function ProductList() {
@@ -75,25 +76,27 @@ export default function ProductList() {
 
     return (
         <>
-            <div>
-                <Card className="m-9 p-9">
-                    <CardHeader>
-                        <CardTitle>Data Product</CardTitle>
-                        <CardAction><ProductAdd onSuccess={getListAllProduct}/></CardAction>
-                    </CardHeader>
+            <div className="my-9 mx-9">
+                <div className="w-full rounded-t-sm bg-[#3674B5] dark:bg-[#010d2b] border-2 text-white p-4">
+                    <div className="flex justify-between items-center py-2">
+                        <h2 className="font-semibold">Data Product</h2>
+                        <ProductAdd onSuccess={getListAllProduct}/>
+                    </div>
+                </div>
+                <Card className="m-0 bg-white rounded-none dark:bg-[#030a1b] overflow-hidden shadow-none rounded-b-sm">
                     <CardContent>
                         {/* DESKTOP TABLE */}
                         <div className="hidden lg:block">
-                            <Table className="bg-white overflow-hidden border-2 rounded-lg shadow">
-                            <TableHeader className="bg-blue-700 ">
+                            <Table className="overflow-hidden border-2 rounded-lg shadow dark:text-se">
+                            <TableHeader>
                                 <TableRow>
-                                <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">ID</TableHead>
-                                <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">Product Name</TableHead>
-                                <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">Product Desk</TableHead>
-                                <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">Product Price</TableHead>
-                                <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">Product Stock</TableHead>
-                                <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">Product Category</TableHead>
-                                <TableHead className="text-center px-6 py-3  text-sm font-semibold text-white ">Action</TableHead>
+                                <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">ID</TableHead>
+                                <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">Product Name</TableHead>
+                                <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">Product Desk</TableHead>
+                                <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">Product Price</TableHead>
+                                <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">Product Stock</TableHead>
+                                <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">Product Category</TableHead>
+                                <TableHead className="text-end dark:text-[#b5c2e4] px-6 text-sm font-semibold ">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -106,14 +109,17 @@ export default function ProductList() {
                                 ) : (
                                 paginatedData.map((product) => (
                                     <TableRow key={product.productId}>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{product.productId}</TableCell>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{product.productName}</TableCell>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{product.productDescription}</TableCell>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{product.productPrice}</TableCell>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{product.productStock}</TableCell>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{product.productCategory.categoryName}</TableCell>
-                                    <TableCell className="text-center px-6 py-4 text-sm text-gray-700">
-                                        <div className="flex justify-end items-center gap-2">
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{product.productId}</TableCell>
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{product.productName}</TableCell>
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{product.productDescription}</TableCell>
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{product.productPrice}</TableCell>
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{product.productStock}</TableCell>
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{product.productCategory.categoryName}</TableCell>
+                                    <TableCell className="px-1">
+                                        <div className="flex justify-end gap-3">
+                                        <ProductDetail
+                                            idProduct={product.productId as number}
+                                        />
                                         <ProductEdit
                                             onSuccess={getListAllProduct}
                                             idProduct={product.productId as number}
@@ -134,11 +140,11 @@ export default function ProductList() {
                         {/* MOBILE CARD VERSION */}
                         <div className="lg:hidden space-y-4">
                             {paginatedData.length === 0 ? (
-                            <p className="text-center text-gray-500">No products found.</p>
+                            <p className="text-center text-gray-500  dark:text-[#c8cee0]">No products found.</p>
                             ) : (
                             paginatedData.map((product) => (
-                                <div key={product.productId} className="border rounded p-4 shadow">
-                                <div className="mb-2">
+                                <div key={product.productId} className="border p-6 shadow text-gray-700 dark:bg-[#010d2b] dark:text-[#c8cee0] rounded-lg">
+                                <div className="mb-2 ">
                                     <strong>ID:</strong> {product.productId}
                                 </div>
                                 <div className="mb-2">
@@ -157,6 +163,10 @@ export default function ProductList() {
                                     <strong>Category:</strong> {product.productCategory.categoryName}
                                 </div>
                                 <div className="flex justify-end gap-2">
+                                    <ProductDetail
+                                    idProduct={product.productId as number}
+                                    />
+
                                     <ProductEdit
                                     onSuccess={getListAllProduct}
                                     idProduct={product.productId as number}
@@ -170,7 +180,7 @@ export default function ProductList() {
                             ))
                             )}
                         </div>
-                        <div className="mt-4 w-full flex justify-between items-center px-3">
+                        <div className="mt-4 w-full flex justify-between items-center px-3 dark:text-[#c8cee0]">
                             <div className="justify-start">
                                 <p className="text-sm text-gray-500 mt-2">
                                 Page {currentPage} of {totalPages}
@@ -196,6 +206,7 @@ export default function ProductList() {
                                                         e.preventDefault();
                                                         setCurrentPage(index + 1);
                                                     }}
+                                                     className="hover:text-[#aeb7d3]"
                                                 >
                                                 {index + 1}
                                                 </PaginationLink>

@@ -18,6 +18,7 @@ import { Input } from "../ui/input";
 import type { EditProductDto } from "@/interface/Product.interface";
 import { Label } from "@radix-ui/react-label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { FaEdit } from "react-icons/fa";
 
 type OptionCategory = {
   value: string;
@@ -280,7 +281,13 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
         <> 
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
-                    <Button className="bg-blue-700 text-white hover:bg-blue-500 hover:text-white" variant="outline" onClick={openModal}>Edit Product</Button>
+                    <button  onClick={openModal} className="flex items-center text-sm bg-[#0767b6] hover:bg-[#0878e0] text-white dark:bg-[#064f8a] dark:hover:bg-[#0a62b4] hover:text-white px-5 rounded">  
+                        <FaEdit
+                            className="text-white  hover:text-white rounded cursor-pointer my-1"
+                            size={16}
+                            onClick={openModal}
+                        />
+                        </button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]" >
                     <DialogHeader>
@@ -380,7 +387,7 @@ export default function ProductEdit({onSuccess, idProduct} : ProductEditProps) {
                             )}
                             {errors.productImage && <p className="text-red-500 text-sm">{errors.productImage}</p>}
                         </div>
-                        <Button className="bg-blue-700 text-white hover:bg-blue-500 hover:text-white" type="submit" disabled={isLoading}>
+                        <Button className="bg-[#0767b6] hover:bg-[#0878e0] text-white dark:bg-[#064f8a] dark:hover:bg-[#0a62b4] hover:text-white" type="submit" disabled={isLoading}>
                             {isLoading ? "Update..." : "Update changes"}
                         </Button>
                     </form>

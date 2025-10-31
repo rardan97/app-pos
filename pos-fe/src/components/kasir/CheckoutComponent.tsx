@@ -144,7 +144,7 @@ export default function CheckoutComponent({disabled, className, dataCart, }: Buy
                     <Button
                         onClick={handleProceedToCheckout}
                         disabled={dataCart.length === 0}
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-500 text-white"
                     >
                         Proccess Payment
                     </Button>

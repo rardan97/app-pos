@@ -21,7 +21,6 @@ public class PetugasDetailsImpl implements UserDetails {
     @JsonIgnore
     private String petugasPassword;
 
-    // If you're not using roles at all, just return an empty list
     private final Collection<? extends GrantedAuthority> authorities;
 
     public PetugasDetailsImpl(Long petugasId, String petugasUsername, String petugasPassword, Collection<? extends GrantedAuthority> authorities) {

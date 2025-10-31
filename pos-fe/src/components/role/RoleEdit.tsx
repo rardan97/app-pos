@@ -130,11 +130,13 @@ export default function RoleEdit({onSuccess, idRole} : RoleEditProps) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <FaEdit
-                    className="text-blue-700 hover:bg-blue-500 hover:text-white p-1 rounded cursor-pointer"
-                    size={30}
-                    onClick={openModal}
-                />
+                <button  onClick={openModal} className="flex items-center text-sm bg-[#0767b6] hover:bg-[#0878e0] text-white dark:bg-[#064f8a] dark:hover:bg-[#0a62b4] hover:text-white px-5 rounded">  
+                        <FaEdit
+                            className="text-white  hover:text-white rounded cursor-pointer my-1"
+                            size={16}
+                            onClick={openModal}
+                        />
+                        </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]" >
                 <DialogHeader>
@@ -183,7 +185,7 @@ export default function RoleEdit({onSuccess, idRole} : RoleEditProps) {
                         />
                         {errors.rolePetugasDesc && <p className="text-red-500 text-sm">{errors.rolePetugasDesc}</p>}
                     </div>
-                    <Button className="bg-blue-700 text-white hover:bg-blue-500 hover:text-white" type="submit">Save changes</Button>
+                    <Button className="bg-[#0767b6] hover:bg-[#0878e0] text-white dark:bg-[#064f8a] dark:hover:bg-[#0a62b4] hover:text-white" type="submit">Save changes</Button>
                 </form>
             </DialogContent>
         </Dialog>

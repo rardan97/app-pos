@@ -16,6 +16,8 @@ import com.blackcode.pos_be.repository.ProductRepository;
 import com.blackcode.pos_be.repository.TransactionItemRepository;
 import com.blackcode.pos_be.repository.TransactionRepository;
 import com.blackcode.pos_be.service.DataTransactionService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +27,8 @@ import java.util.List;
 
 @Service
 public class DataTransactionServiceImpl implements DataTransactionService {
+
+    private static final Logger logger = LoggerFactory.getLogger(DataTransactionServiceImpl.class);
 
     private final TransactionRepository transactionRepository;
 

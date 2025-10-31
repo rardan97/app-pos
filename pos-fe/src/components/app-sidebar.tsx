@@ -67,7 +67,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
        <SidebarHeader>
         <SidebarMenu>
           <SidebarMenuItem>
-            <SidebarMenuButton size="lg" asChild>
+            <SidebarMenuButton size="lg" asChild className="px-6 py-8">
               <a href="#">
                 <div className="bg-sidebar-primary text-sidebar-primary-foreground flex aspect-square size-10 items-center justify-center rounded-lg">
                   <UtensilsCrossed className="size-7" />
@@ -83,12 +83,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
      <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu className="flex flex-col gap-5 pl-3">
+            <SidebarMenu className="flex flex-col gap-5 pl-7">
               {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
+                <SidebarMenuItem key={item.title} className="py-1">
                   <SidebarMenuButton asChild>
                     <Link to={item.url}>
-                      <item.icon style={{ width: 21, height: 21 }}/>
+                      <item.icon style={{ width: 21, height: 21 }} />
                       <span>{item.title}</span>
                     </Link>
                   </SidebarMenuButton>

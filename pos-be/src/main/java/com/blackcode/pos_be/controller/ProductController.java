@@ -1,21 +1,13 @@
 package com.blackcode.pos_be.controller;
 
-import com.blackcode.pos_be.common.dto.ApiResponse;
+import com.blackcode.pos_be.utils.ApiResponse;
 import com.blackcode.pos_be.dto.*;
-import com.blackcode.pos_be.service.CategoryService;
-import com.blackcode.pos_be.service.FileStorageService;
 import com.blackcode.pos_be.service.ProductService;
-import org.apache.kafka.shaded.com.google.protobuf.Api;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
 import java.util.Map;
 

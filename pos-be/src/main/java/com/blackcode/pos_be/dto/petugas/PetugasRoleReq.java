@@ -14,5 +14,6 @@ public class PetugasRoleReq {
 
     private String rolePetugasName;
 
+    private String rolePetugasDesc;
 
 }

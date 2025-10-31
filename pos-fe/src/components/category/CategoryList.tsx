@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "../ui/table";
-import { Card, CardAction, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Card, CardContent} from "../ui/card";
 import type { Category } from "@/interface/Category.interface";
 import { getListCategories } from "@/api/CategoryApi";
 import CategoryAdd from "./CategoryAdd";
@@ -67,21 +67,24 @@ export default function CategoryList() {
 
     return (
         <>
-            <div>
-                <Card className="m-9 p-9">
-                    <CardHeader>
-                        <CardTitle>Data Category</CardTitle>
-                        <CardAction><CategoryAdd onSuccess={getListAllUser}/></CardAction>
-                    </CardHeader>
-                    <CardContent>
+           <div className="my-9 mx-9">
+                <div className="w-full rounded-t-sm bg-[#3674B5] dark:bg-[#010d2b] border-2 text-white p-4">
+                    <div className="flex justify-between items-center py-2">
+                        <h2 className="font-semibold">Data Category</h2>
+                        <CategoryAdd onSuccess={getListAllUser}/>
+                    </div>
+                    </div>
+                    <Card className="m-0 bg-white rounded-none dark:bg-[#030a1b] overflow-hidden shadow-none rounded-b-sm">
+                        <CardContent>
+                            {/* DESKTOP TABLE */}
                         <div className="hidden lg:block">
-                            <Table className="bg-white overflow-hidden border-2 rounded-lg shadow">
-                                <TableHeader className="bg-blue-700 ">
+                            <Table className="overflow-hidden border-2 rounded-lg shadow dark:text-se">
+                                <TableHeader>
                                     <TableRow>
-                                    <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">ID</TableHead>
-                                    <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">Category Name</TableHead>
-                                    <TableHead className="px-6 py-3 text-left text-sm font-semibold text-white">Category Desk</TableHead>
-                                    <TableHead className="text-center px-6 py-3  text-sm font-semibold text-white ">Action</TableHead>
+                                    <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">ID</TableHead>
+                                    <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">Category Name</TableHead>
+                                    <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold ">Category Desk</TableHead>
+                                    <TableHead className="text-end dark:text-[#b5c2e4] px-6 text-sm font-semibold ">Action</TableHead>
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
@@ -94,12 +97,14 @@ export default function CategoryList() {
                                     ) : (
                                 paginatedData.map((category) => (
                                     <TableRow key={category.categoryId}>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{category.categoryId}</TableCell>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{category.categoryName}</TableCell>
-                                    <TableCell className="px-6 py-4 text-sm text-gray-700">{category.categoryDescription}</TableCell>
-                                    <TableCell className="text-center px-6 py-4 text-sm text-gray-700">
-                                        <CategoryEdit onSuccess={getListAllUser} idCat={category.categoryId as number} />
-                                        <CategoryDelete onSuccess={getListAllUser} idCat={category.categoryId as number} />
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{category.categoryId}</TableCell>
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{category.categoryName}</TableCell>
+                                    <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{category.categoryDescription}</TableCell>
+                                    <TableCell className="px-1">
+                                        <div className="flex justify-end gap-3">
+                                            <CategoryEdit onSuccess={getListAllUser} idCat={category.categoryId as number} />
+                                            <CategoryDelete onSuccess={getListAllUser} idCat={category.categoryId as number} />
+                                        </div>
                                     </TableCell>
                                     </TableRow>
                                      ))
@@ -109,10 +114,10 @@ export default function CategoryList() {
                         </div>
                         <div className="lg:hidden space-y-4">
                            {paginatedData.length === 0 ? (
-                            <p className="text-center text-gray-500">No category found.</p>
+                            <p className="text-center text-gray-500  dark:text-[#c8cee0]">No category found.</p>
                             ) : (
                             paginatedData.map((category) => (
-                                <div key={category.categoryId} className="border rounded p-4 shadow">
+                                <div key={category.categoryId} className="border p-6 shadow text-gray-700 dark:bg-[#010d2b] dark:text-[#c8cee0] rounded-lg">
                                     <div className="mb-2">
                                         <strong>ID:</strong> {category.categoryId}
                                     </div>
@@ -134,7 +139,7 @@ export default function CategoryList() {
                              ))
                             )}
                         </div>
-                        <div className="mt-4 w-full flex justify-between items-center px-3">
+                        <div className="mt-4 w-full flex justify-between items-center px-3 dark:text-[#c8cee0]">
                             <div className="justify-start">
                                 <p className="text-sm text-gray-500 mt-2">
                                 Page {currentPage} of {totalPages}
@@ -160,6 +165,7 @@ export default function CategoryList() {
                                                         e.preventDefault();
                                                         setCurrentPage(index + 1);
                                                     }}
+                                                     className="hover:text-[#aeb7d3]"
                                                 >
                                                 {index + 1}
                                                 </PaginationLink>

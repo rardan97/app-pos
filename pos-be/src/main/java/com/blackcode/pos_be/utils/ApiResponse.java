@@ -1,4 +1,4 @@
-package com.blackcode.pos_be.common.dto;
+package com.blackcode.pos_be.utils;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

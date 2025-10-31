@@ -9,6 +9,8 @@ import com.blackcode.pos_be.model.Category;
 import com.blackcode.pos_be.model.petugas.PetugasRole;
 import com.blackcode.pos_be.repository.PetugasRoleRepository;
 import com.blackcode.pos_be.service.PetugasRoleService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,6 +18,8 @@ import java.util.*;
 
 @Service
 public class PetugasRoleServiceImpl implements PetugasRoleService {
+
+    private static final Logger logger = LoggerFactory.getLogger(PetugasRoleServiceImpl.class);
 
     private final PetugasRoleRepository petugasRoleRepository;
 
@@ -50,6 +54,7 @@ public class PetugasRoleServiceImpl implements PetugasRoleService {
 
         PetugasRole petugasRole = new PetugasRole();
         petugasRole.setRoleName(petugasRoleReq.getRolePetugasName());
+        petugasRole.setRoleDesc(petugasRoleReq.getRolePetugasDesc());
         PetugasRole savePetugasRole = petugasRoleRepository.save(petugasRole);
 
         return mapToPetugasRoleRes(savePetugasRole);
@@ -61,6 +66,7 @@ public class PetugasRoleServiceImpl implements PetugasRoleService {
                 .orElseThrow(() -> new DataNotFoundException("Role with ID "+ roleId + "Not Found"));
 
         petugasRole.setRoleName(petugasRoleReq.getRolePetugasName());
+        petugasRole.setRoleDesc(petugasRoleReq.getRolePetugasDesc());
         PetugasRole updatePetugasRole = petugasRoleRepository.save(petugasRole);
 
         return mapToPetugasRoleRes(updatePetugasRole);
@@ -80,6 +86,7 @@ public class PetugasRoleServiceImpl implements PetugasRoleService {
         PetugasRoleRes petugasRoleRes = new PetugasRoleRes();
         petugasRoleRes.setRolePetugasId(petugasRole.getRoleId());
         petugasRoleRes.setRolePetugasName(petugasRole.getRoleName());
+        petugasRoleRes.setRolePetugasDesc(petugasRole.getRoleDesc());
         return petugasRoleRes;
     }
 }

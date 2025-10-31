@@ -15,4 +15,6 @@ public interface PetugasService {
     PetugasRes getPetugasById(Long petugasId);
 
     PetugasRes addPetugas(PetugasReq petugasReq);
+
+    PetugasRes editPetugas(Long petugasId, PetugasReq petugasReq);
 }

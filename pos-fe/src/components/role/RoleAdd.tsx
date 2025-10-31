@@ -98,7 +98,7 @@ export default function RoleAdd({ onSuccess }: { onSuccess: () => void }) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-               <button  onClick={openModal} className="flex items-center gap-2 text-sm bg-green-600 text-white hover:bg-green-500 hover:text-white p-2 rounded">             
+                <button  onClick={openModal} className="flex items-center gap-2 text-sm bg-green-600 hover:bg-green-500 text-white hover:text-white p-2 rounded">             
                 <MdAdd className="text-white hover:text-white rounded cursor-pointer" size={20} />
                 Add Role
             </button>
@@ -142,7 +142,7 @@ export default function RoleAdd({ onSuccess }: { onSuccess: () => void }) {
                         {errors.rolePetugasDesc && <p className="text-red-500 text-sm">{errors.rolePetugasDesc}</p>}
                         
                     </div>
-                    <Button className="bg-green-600 text-white hover:bg-green-400 hover:text-white" type="submit">Save</Button>
+                    <Button className="bg-green-600 hover:bg-green-500 text-white hover:text-white rounded" type="submit">Save</Button>
                 </form>
             </DialogContent>
         </Dialog>

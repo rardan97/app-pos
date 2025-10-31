@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "@/context/AuthContext";
 import { signInAuth } from "@/api/AuthLoginApi";
@@ -145,12 +145,6 @@ export function LoginForm() {
                 {isLoading ? "Logging in..." : "Login"}
                 </Button>
                 
-            </div>
-            <div className="text-center text-sm">
-                Don&apos;t have an account?{" "}
-                <Link to="/register" className="underline underline-offset-4">
-                    Sign up
-                </Link>
             </div>
         </form>
     )

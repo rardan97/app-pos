@@ -23,6 +23,8 @@ import com.midtrans.Config;
 import com.midtrans.httpclient.SnapApi;
 import com.midtrans.httpclient.error.MidtransError;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,8 @@ import java.util.*;
 
 @Service
 public class OrderTransactionServiceImpl implements OrderTransactionService {
+
+    private static final Logger logger = LoggerFactory.getLogger(OrderTransactionServiceImpl.class);
 
     private final TransactionRepository transactionRepository;
 
@@ -49,7 +53,10 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
 
     private static final boolean IS_PRODUCTION = false;
 
-    public OrderTransactionServiceImpl(TransactionRepository transactionRepository, TransactionItemRepository transactionItemRepository, PetugasRepository petugasRepository, ProductRepository productRepository) {
+    public OrderTransactionServiceImpl(TransactionRepository transactionRepository,
+                                       TransactionItemRepository transactionItemRepository,
+                                       PetugasRepository petugasRepository,
+                                       ProductRepository productRepository) {
         this.transactionRepository = transactionRepository;
         this.transactionItemRepository = transactionItemRepository;
         this.petugasRepository = petugasRepository;
@@ -157,7 +164,6 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         return transactionRes;
     }
 
-
     private static int calculateTotal(List<DataProductTransaction> items) {
         int total = 0;
         for (DataProductTransaction item : items) {
@@ -167,7 +173,6 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         }
         return total;
     }
-
 
     private static List<DataItemsDto> convertToDataItemsDto(List<DataProductTransaction> items) {
         List<DataItemsDto> list = new ArrayList<>();
@@ -181,7 +186,4 @@ public class OrderTransactionServiceImpl implements OrderTransactionService {
         }
         return list;
     }
-
-
-
 }

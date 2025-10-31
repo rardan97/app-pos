@@ -20,5 +20,7 @@ public class PetugasRes {
 
     private String petugasUsername;
 
-    private String petugasRole;
+    private String petugasPassword;
+
+    private PetugasRoleRes petugasRole;
 }

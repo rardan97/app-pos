@@ -1,5 +1,6 @@
 import { REST_API_BASE_URL } from "@/config";
-import type { Petugas } from "@/interface/Petugas.interface";
+import type { ApiResponse } from "@/interface/ApiResponse.interface";
+import type { Petugas, PetugasReq, PetugasRes } from "@/interface/Petugas.interface";
 import axios from "axios";
 
 
@@ -8,15 +9,17 @@ export const api = axios.create({
     withCredentials: true
 });
 
-export async function getListPetugas(token: string) : Promise<Petugas[]>{
+export async function getListPetugas(token: string) : Promise<ApiResponse<Petugas[]>>{
     console.log("Data Token : "+token);
     try{
-        const response = await api.get<Petugas[]>(`/datapetugas/getPetugasListAll`, {
+        const response = await api.get<ApiResponse<Petugas[]>>(`/datapetugas/getPetugasListAll`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
             },
         });
+
+        console.log("data return : "+response.data);
         return response.data;
     }catch(error){
         console.error("Error during user fetch:", error);
@@ -25,11 +28,11 @@ export async function getListPetugas(token: string) : Promise<Petugas[]>{
 }
 
 
-export async function getPetugasValueById(token: string, id : number) : Promise<Petugas>{
+export async function getPetugasValueById(token: string, id : number) : Promise<ApiResponse<Petugas>>{
     console.log("check token :"+token);
     console.log("check id :"+id);
     try{
-        const response = await api.get<Petugas>(`/datapetugas/getPetugasFindById/${id}`, {
+        const response = await api.get<ApiResponse<Petugas>>(`/datapetugas/getPetugasFindById/${id}`, {
             headers: {
                 "Content-Type": "application/json",
                 Authorization: `Bearer ${token}`,
@@ -41,3 +44,26 @@ export async function getPetugasValueById(token: string, id : number) : Promise<
         throw new Error("Failed to fetch users");
     }
 }
+
+
+export async function addPetugas(token: string, data: PetugasReq): Promise<ApiResponse<PetugasRes>> {
+    console.log("data :"+data);
+    try{
+        const response = await api.post<ApiResponse<PetugasRes>>(`/datapetugas/addPetugas`, data, {
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return response.data;
+    }catch (error){
+        console.error("Sign Up failed:", error);
+        throw new Error("Sign Up failed");
+    }
+}
+
+
+
+
+
+

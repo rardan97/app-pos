@@ -1,7 +1,7 @@
 package com.blackcode.pos_be.controller;
 
 
-import com.blackcode.pos_be.common.dto.ApiResponse;
+import com.blackcode.pos_be.utils.ApiResponse;
 import com.blackcode.pos_be.dto.petugas.PetugasRoleReq;
 import com.blackcode.pos_be.dto.petugas.PetugasRoleRes;
 import com.blackcode.pos_be.service.PetugasRoleService;

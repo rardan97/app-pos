@@ -66,5 +66,4 @@ public class JwtUtils {
             throw new InvalidJwtException("Token is null or empty", e);
         }
     }
-
 }

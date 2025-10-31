@@ -11,6 +11,8 @@ import com.blackcode.pos_be.repository.CategoryRepository;
 import com.blackcode.pos_be.repository.ProductRepository;
 import com.blackcode.pos_be.service.FileStorageService;
 import com.blackcode.pos_be.service.ProductService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -22,6 +24,8 @@ import java.util.*;
 
 @Service
 public class ProductServiceImpl implements ProductService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProductServiceImpl.class);
 
     @Value("${upload.dir}")
     private String uploadDir;
@@ -64,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
         product.setProductName(productReq.getProductName());
         product.setProductDescription(productReq.getProductDescription());
         product.setProductPrice(productReq.getProductPrice());
+        product.setProductStock(productReq.getProductStock());
 
         if (productImage != null && !productImage.isEmpty()) {
             String imagePath = storageService.store(productImage);
@@ -101,8 +106,10 @@ public class ProductServiceImpl implements ProductService {
         Product product = productRepository.findById(productId)
                         .orElseThrow(() -> new DataNotFoundException("Role with ID "+productId+ "Not Found"));
 
+        productRepository.deleteById(productId);
+
         Map<String, Object> responseData = new HashMap<>();
-        responseData.put("deleteProductId", product);
+        responseData.put("deleteProductId", product.getProductId());
         responseData.put("info", "The product was removed from database.");
         return responseData;
     }
@@ -115,7 +122,6 @@ public class ProductServiceImpl implements ProductService {
         headers.setContentType(MediaType.IMAGE_JPEG);
         return new ImageLoadDto(image, headers);
     }
-
 
     private ProductRes mapToProductRes(Product product) {
         ProductRes productRes = new ProductRes();
@@ -143,13 +149,13 @@ public class ProductServiceImpl implements ProductService {
                 if (file.exists()) {
                     storageService.delete(existingImage);
                 } else {
-                    System.out.println("Gambar Tidak Tersedia di Storage");
+                    logger.info("Gambar Tidak Tersedia di Storage");
                 }
 
                 String newImagePath = storageService.store(productImage);
                 product.setProductImage(newImagePath);
             } else {
-                System.out.println("Image user tidak di ganti");
+                logger.info("Image user tidak di ganti");
             }
         } else {
             String newImagePath = storageService.store(productImage);

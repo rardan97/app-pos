@@ -18,6 +18,7 @@ import { addCategories } from "@/api/CategoryApi";
 import type { CategoryDto } from "@/interface/Category.interface";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircleIcon } from "lucide-react";
+import { MdAdd } from "react-icons/md";
 
 
 interface Errors {
@@ -95,7 +96,10 @@ export default function CategoryAdd({ onSuccess }: { onSuccess: () => void }) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
-           <Button className="bg-green-600 text-white hover:bg-green-400 hover:text-white" variant="outline" onClick={openModal}>Add Category</Button>
+           <button  onClick={openModal} className="flex items-center gap-2 text-sm bg-green-600 hover:bg-green-500 text-white hover:text-white p-2 rounded">             
+                           <MdAdd className="text-white hover:text-white rounded cursor-pointer" size={20} />
+                           Add Category
+                       </button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-[425px]" >
            <DialogHeader>
@@ -126,7 +130,7 @@ export default function CategoryAdd({ onSuccess }: { onSuccess: () => void }) {
                     <Label htmlFor="categoryDescription">Category Deskripsi</Label>
                     <Input id="categoryDescription" type="text" onChange={(e) => setCategoryDescription(e.target.value)}/>
                 </div>
-                <Button className="bg-green-600 text-white hover:bg-green-400 hover:text-white" type="submit">Save changes</Button>
+                <Button className="bg-green-600 hover:bg-green-500 text-white hover:text-white rounded" type="submit">Save changes</Button>
             </form>
          </DialogContent>
        </Dialog>

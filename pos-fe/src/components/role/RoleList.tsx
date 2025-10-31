@@ -63,22 +63,22 @@ export default function RoleList() {
     return (
         <>
         <div className="my-9 mx-9">
-            <div className="w-full bg-blue-600 text-white p-4">
-                <div className="flex justify-between items-center">
+            <div className="w-full rounded-t-sm bg-[#3674B5] dark:bg-[#010d2b] border-2 text-white p-4">
+                <div className="flex justify-between items-center py-2">
                     <h2 className="font-semibold">Data Role</h2>
                     <RoleAdd onSuccess={getListAllUser} />
                 </div>
             </div>
-               <Card className="m-0 bg-transparent rounded-none overflow-hidden shadow-none">
+               <Card className="m-0 bg-white rounded-none dark:bg-[#030a1b] overflow-hidden shadow-none rounded-b-sm">
                 <CardContent>
-                    <div className="hidden lg:block">
-                        <Table className="bg-white overflow-hidden border-2 rounded-lg shadow">
-                            <TableHeader>
+                   <div className="hidden lg:block">
+                            <Table className="overflow-hidden border-2 rounded-lg shadow dark:text-se">
+                            <TableHeader className="">
                                 <TableRow>
-                                    <TableHead className="px-6  text-left text-sm font-semibold ">ID</TableHead>
-                                    <TableHead className="px-6  text-left text-sm font-semibold ">Role Name</TableHead>
-                                    <TableHead className="px-6  text-left text-sm font-semibold ">Description</TableHead>
-                                    <TableHead className="text-end px-6 text-sm font-semibold ">Action</TableHead>
+                                    <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold">ID</TableHead>
+                                    <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold">Role Name</TableHead>
+                                    <TableHead className="px-6 dark:text-[#b5c2e4] text-left text-sm font-semibold">Description</TableHead>
+                                    <TableHead className="text-end dark:text-[#b5c2e4] px-6 text-sm font-semibold">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -92,12 +92,20 @@ export default function RoleList() {
                                 ) : (
                                 paginatedData.map((role) => (
                                     <TableRow key={role.rolePetugasId}>
-                                        <TableCell className="px-6 py-2 text-sm text-gray-700">{role.rolePetugasId}</TableCell>
-                                        <TableCell className="px-6 py-2 text-sm text-gray-700">{role.rolePetugasName}</TableCell>
-                                        <TableCell className="px-6 py-2 text-sm text-gray-700">-</TableCell>
-                                        <TableCell className="flex justify-end gap-2 px-6 py-2">
-                                            <RoleEdit onSuccess={getListAllUser} idRole={role.rolePetugasId as number} />
-                                            <RoleDelete onSuccess={getListAllUser} idRole={role.rolePetugasId as number} />
+                                        <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{role.rolePetugasId}</TableCell>
+                                        <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{role.rolePetugasName}</TableCell>
+                                        <TableCell className="px-6 py-2 text-sm text-gray-700 dark:text-[#c8cee0]">{role.rolePetugasDesc}</TableCell>
+                                        <TableCell className="px-1">
+                                        <div className="flex justify-end gap-3">
+                                            <RoleEdit 
+                                                onSuccess={getListAllUser} 
+                                                idRole={role.rolePetugasId as number} 
+                                            />
+                                            <RoleDelete 
+                                                onSuccess={getListAllUser} 
+                                                idRole={role.rolePetugasId as number} 
+                                            />
+                                        </div>
                                         </TableCell>
                                     </TableRow>
                                      ))
@@ -108,10 +116,10 @@ export default function RoleList() {
 
                     <div className="lg:hidden space-y-4">
                         {roles.length === 0 ? (
-                            <p className="text-center text-gray-500">No Role found.</p>
+                             <p className="text-center text-gray-500  dark:text-[#c8cee0]">No products found.</p>
                         ) : (
                             roles.map((role) => (
-                                <div key={role.rolePetugasId} className="border rounded p-4 shadow">
+                                <div key={role.rolePetugasId}  className="border p-6 shadow text-gray-700 dark:bg-[#010d2b] dark:text-[#c8cee0] rounded-lg">
                                 <div className="mb-2">
                                     <strong>ID:</strong> {role.rolePetugasId}
                                 </div>
@@ -119,7 +127,7 @@ export default function RoleList() {
                                     <strong>Role Name:</strong> {role.rolePetugasName}
                                 </div>
                                 <div className="mb-2">
-                                    <strong>Description:</strong> -
+                                    <strong>Description:</strong> {role.rolePetugasDesc}
                                 </div>
                                 <div className="flex justify-end gap-2">
                                     <RoleEdit onSuccess={getListAllUser} idRole={role.rolePetugasId as number} />

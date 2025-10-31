@@ -18,6 +18,7 @@ import { editCategories, getCategoryValueById } from "@/api/CategoryApi";
 import type { Category } from "@/interface/Category.interface";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircleIcon } from "lucide-react";
+import { FaEdit } from "react-icons/fa";
 
 
 type CategoryEditProps = {
@@ -135,7 +136,13 @@ export default function CategoryEdit({onSuccess, idCat} : CategoryEditProps) {
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
          <DialogTrigger asChild>
-           <Button className="lg:mx-2 bg-blue-700 text-white hover:bg-blue-500 hover:text-white" variant="outline" onClick={openModal}>Edit Category</Button>
+           <button  onClick={openModal} className="flex items-center text-sm bg-[#0767b6] hover:bg-[#0878e0] text-white dark:bg-[#064f8a] dark:hover:bg-[#0a62b4] hover:text-white px-5 rounded">  
+                                   <FaEdit
+                                       className="text-white  hover:text-white rounded cursor-pointer my-1"
+                                       size={16}
+                                       onClick={openModal}
+                                   />
+                                   </button>
          </DialogTrigger>
          <DialogContent className="sm:max-w-[425px]" >
            <DialogHeader>
@@ -182,7 +189,7 @@ export default function CategoryEdit({onSuccess, idCat} : CategoryEditProps) {
                         value={categoryDescription}
                         onChange={(e) => setCategoryDescription(e.target.value)}/>
                 </div>
-                <Button className="bg-blue-700 text-white hover:bg-blue-500 hover:text-white" type="submit">Save changes</Button>
+                <Button className="bg-[#0767b6] hover:bg-[#0878e0] text-white dark:bg-[#064f8a] dark:hover:bg-[#0a62b4] hover:text-white" type="submit">Save changes</Button>
             </form>
          </DialogContent>
        </Dialog>

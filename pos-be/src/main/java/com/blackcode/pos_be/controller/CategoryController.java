@@ -1,10 +1,9 @@
 package com.blackcode.pos_be.controller;
 
-import com.blackcode.pos_be.common.dto.ApiResponse;
+import com.blackcode.pos_be.utils.ApiResponse;
 import com.blackcode.pos_be.dto.CategoryReq;
 import com.blackcode.pos_be.dto.CategoryRes;
 import com.blackcode.pos_be.service.CategoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,6 +1,8 @@
 package com.blackcode.pos_be.service.impl;
 
 import com.blackcode.pos_be.service.FileStorageService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,6 +16,8 @@ import java.util.UUID;
 
 @Service
 public class FileStorageServiceImpl implements FileStorageService {
+
+    private static final Logger logger = LoggerFactory.getLogger(FileStorageServiceImpl.class);
 
     @Value("${upload.dir}")
     private String uploadDir;

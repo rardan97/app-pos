@@ -15,4 +15,6 @@ public class PetugasRoleRes {
     private Long rolePetugasId;
 
     private String rolePetugasName;
+
+    private String rolePetugasDesc;
 }

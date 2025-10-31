@@ -118,7 +118,7 @@ export default function KasirComponent() {
 
     return (
         <div className="w-full p-9">
-            <h1 className="text-2xl font-bold mb-6">Halaman Kasir</h1>
+            
             <div className="flex flex-col lg:flex-row gap-4">
                 {/* Menu */}
                 <div className="w-full lg:w-1/1 space-y-6">
@@ -126,11 +126,11 @@ export default function KasirComponent() {
                     <section className="mb-8"> 
                         <div>
                             <h2 className="text-lg font-semibold mb-4 border-b-2 border-gray-300 pb-2">Makanan</h2>
-                            <div className="grid grid-cols-2 lg:grid-cols-4 md:grid-cols-2 gap-6">
+                            <div className="grid lg:grid-cols-4 md:grid-cols-2 sm:grid-cols-1 gap-6">
                             {makanan.map((item) => (
                                 <Card
                                     key={item.productId}
-                                    className="flex flex-col justify-between rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1 hover:scale-[1.02] pt-0" 
+                                    className="flex flex-col justify-between rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1 hover:scale-[1.02] pt-0 dark:bg-[#010d2b] " 
                                     >
                                     <img
                                         src={item.imageUrl}
@@ -146,10 +146,10 @@ export default function KasirComponent() {
                                             </p>
                                             <button
                                                 onClick={() => handleAddToCart(item)}
-                                                className="flex items-center gap-2 bg-green-500 hover:bg-green-600 active:scale-95  text-sm font-semibold px-5 py-2 rounded-full shadow-md transition-transform duration-150"
+                                                className="flex justify-center items-center gap-2 bg-green-600 hover:bg-green-500 text-white hover:text-white active:scale-95  text-sm font-semibold px-5 py-2 rounded-full shadow-md transition-transform duration-150"
                                             >
                                             <Plus className="w-4 h-4" />
-                                                Tambah
+                                                Checkout
                                             </button>
                                         </div>
                                     </div>
@@ -168,7 +168,7 @@ export default function KasirComponent() {
                                 {minuman.map((item) => (
                                     <Card
                                         key={item.productId}
-                                        className="flex flex-col justify-between rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1 hover:scale-[1.02] pt-0" 
+                                        className="flex flex-col justify-between rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden cursor-pointer transform hover:-translate-y-1 hover:scale-[1.02] pt-0 dark:bg-[#010d2b] " 
                                         >
                                         <img
                                             src={item.imageUrl}
@@ -179,15 +179,15 @@ export default function KasirComponent() {
                                             <p className="text-base font-semibold  mb-1">{item.productName}</p>
                                             <p className="text-sm mb-4 line-clamp-3">{item.productDescription}</p>
                                             <div className="flex items-center justify-between">
-                                            <p className="text-sm ">
-                                                Rp{Number(item.productPrice).toLocaleString()}
-                                            </p>
+                                                <p className="text-sm ">
+                                                    Rp{Number(item.productPrice).toLocaleString()}
+                                                </p>
                                             <button
-                                                    onClick={() => handleAddToCart(item)}
-                                                    className="flex items-center gap-2 bg-green-500 hover:bg-green-600 active:scale-95  text-sm font-semibold px-5 py-2 rounded-full shadow-md transition-transform duration-150"
-                                                >
+                                                onClick={() => handleAddToCart(item)}
+                                                className="flex justify-center items-center gap-2 bg-green-600 hover:bg-green-500 text-white hover:text-white active:scale-95  text-sm font-semibold px-5 py-2 rounded-full shadow-md transition-transform duration-150"
+                                            >
                                                     <Plus className="w-4 h-4" />
-                                                    Tambah
+                                                    Checkout
                                                 </button>
                                             </div>
                                         </div>
@@ -200,7 +200,7 @@ export default function KasirComponent() {
 
                 {/* Checkout */}
             
-                    <Card className="w-full lg:w-1/4 p-4">
+                    <Card className="w-full lg:w-1/4 p-4 dark:bg-[#010d2b] ">
                         <h2 className="text-lg font-semibold mb-3">Checkout</h2>
                         <div className="space-y-2 text-sm">
                             {cart.length === 0 ? (
@@ -211,21 +211,21 @@ export default function KasirComponent() {
                             cart.map((item) => (
                                 <div
                                 key={item.id}
-                                className="flex items-center justify-between gap-3 border-b pb-1"
+                                className="flex items-center justify-between gap-3 pb-3 border-b"
                                 >
                                 <div className="flex flex-col">
                                     <span className="font-medium">{item.name}</span>
                                     <div className="flex items-center gap-1 mt-1">
                                     <button
                                         onClick={() => handleDecrease(item.id)}
-                                        className="px-2 py-0.5 bg-gray-200 text-xs rounded hover:bg-gray-300"
+                                        className="px-3 py-0.2 bg-gray-200 text-lg font-semibold rounded hover:bg-gray-300 dark:bg-[#11a39c] hover:dark:bg-[#0dddd3]"
                                     >
                                         -
                                     </button>
                                     <span className="text-xs w-6 text-center">{item.qty}</span>
                                     <button
                                         onClick={() => handleIncreaseQty(item.id)}
-                                        className="px-2 py-0.5 bg-gray-200 text-xs rounded hover:bg-gray-300"
+                                        className="px-3 py-0.2 bg-gray-200 text-lg rounded hover:bg-gray-300 dark:bg-[#11a39c] hover:dark:bg-[#0dddd3]"
                                     >
                                         +
                                     </button>
@@ -253,7 +253,7 @@ export default function KasirComponent() {
                         </div>
                         <CheckoutComponent 
                             disabled={cart.length === 0}
-                            className="mt-4 px-4 py-2 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="mt-4 px-4 py-2 text-sm bg-green-600 hover:bg-green-500 dark:bg-green-600 dark:hover:bg-green-500 text-white hover:text-white rounded"
                             dataCart={cart}
                         />
                     </Card>

@@ -91,11 +91,13 @@ export default function RoleDelete({onSuccess, idRole} : RoleDeleteProps) {
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <MdDelete
-                    className="text-red-500 hover:bg-red-600 hover:text-white p-1 rounded cursor-pointer"
-                    size={30}
-                    onClick={openModal}
-                />
+                <button  onClick={openModal} className="flex items-center text-sm bg-[#d10c57] hover:bg-[#ee065f] dark:bg-[#8a0638] dark:hover:bg-[#af0647] text-white  hover:text-white px-5 rounded">   
+                                <MdDelete
+                                    className="text-white hover:text-white cursor-pointer my-1"
+                                    size={17}
+                                    onClick={openModal}
+                                />
+                            </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]" >
                 <DialogHeader>
@@ -132,7 +134,7 @@ export default function RoleDelete({onSuccess, idRole} : RoleDeleteProps) {
                             disabled
                         />
                     </div>
-                    <Button className="bg-red-700 text-white hover:bg-red-600 hover:text-white" type="submit">Delete</Button>
+                    <Button className="bg-[#d10c57] hover:bg-[#ee065f] dark:bg-[#8a0638] dark:hover:bg-[#af0647] text-white hover:text-white" type="submit">Delete</Button>
                 </form>
             </DialogContent>
         </Dialog>

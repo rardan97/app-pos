@@ -52,9 +52,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
                                     HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
         try{
-            System.out.println("Proccess 1 authtokenfilter");
             String jwt = parseJwt(request);
-            System.out.println("Incoming JWT Token: " + jwt);
+            logger.info("Incoming JWT Token: {}", jwt);
             if(jwt != null){
                 jwtUtils.assertValidToken(jwt);
 

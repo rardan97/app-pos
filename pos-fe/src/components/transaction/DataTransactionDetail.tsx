@@ -18,6 +18,7 @@ import type { Category } from "@/interface/Category.interface";
 import { Alert, AlertDescription, AlertTitle } from "../ui/alert";
 import { AlertCircleIcon } from "lucide-react";
 import { getDataTransactionById } from "@/api/DataTransactionApi";
+import { FaEye } from "react-icons/fa";
 
 
 type DataTransactionDetailProps = {
@@ -76,7 +77,13 @@ export default function DataTransactionDetail({onSuccess, idTransactionId} : Dat
     return (
         <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
-                <Button variant="outline" onClick={openModal}>View</Button>
+                <button  onClick={openModal} className="flex items-center text-sm bg-gray-400 hover:bg-gray-500 text-white  hover:text-white dark:bg-[#50595f] dark:hover:bg-[#8d99a3] px-4 rounded">   
+                                        <FaEye
+                                        className="text-white hover:text-white rounded cursor-pointer m-1"
+                                        size={17}
+                                        onClick={openModal}
+                                    />
+                                    </button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[425px]" >
                 <DialogHeader>
